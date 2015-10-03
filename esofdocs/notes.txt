@@ -1,3 +1,7 @@
 http://blog.atom.io/2015/01/15/announcing-the-atom-1-api.html
 
 http://blog.atom.io/2015/06/25/atom-1-0.html
+
+http://blog.atom.io/2014/05/06/atom-is-now-open-source.html
+
+https://atom.io/releases
