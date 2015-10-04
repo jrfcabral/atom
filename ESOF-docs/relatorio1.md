@@ -29,7 +29,14 @@ Este projeto, inicialmente batizado "Atomicity", começou como um projeto pessoa
 poder focar-se no seu projeto principal, [GitHub.com](http://github.com), Atomicity foi posto de parte. Foi apenas em agosto de 2011 que o projeto voltou a ficar ativo, com Wanstrath e [Corey Johnson](https://github.com/probablycorey) a trabalharem no mesmo nos seus tempos livres. Em novembro de 2011, Atomicity foi renomeado "Atom", como é hoje conhecido, e em dezembro do mesmo ano, [Nathan Sobo](https://github.com/nathansobo) juntou-se à GitHub para traballhar no editor de texto a tempo inteiro. A 26 de fevereiro de 2014 é lançada a versão Beta, aberta ao público, sendo também publicado o código fonte do projeto, incluindo várias bibliotecas e pacotes utilizados no mesmo. Atom torna-se completamente aberto ao público a 6 de maio 2014 e é oficialmente lançado na sua versão 1.0 a 25 de junho de 2015.
 
 ### Estado atual do Projeto
-Hoje em dia, grande parte das atualizações feitas ao Atom consistem de bugfixes, com algumas otimizações e melhorias de algumas funcionalidades.
+
+Os commits feitos até hoje são normalmente acompanhados de
+uma mensagem que explicita a sua razão de existir de uma forma clara e concisa
+pelo que, a nosso ver, são fáceis de interpretar. A quantidade de commits
+parece-nos bastante abundante e é explicada pelo número de contribuidores
+existentes no projeto (238).
+
+Hoje em dia, grande parte das atualizações feitas ao Atom consistem em bugfixes, com algumas otimizações e melhorias de algumas funcionalidades.
 
 
 ## Processo
@@ -54,3 +61,12 @@ No âmbito dum projeto open-source, Incremental development and delivery é bom 
 Quanto mais seguidores o projeto tiver, maior será a quantidade de feedback recebida, bem como a quantidade de pedidos de funcionalidades. Além disso, os pequenos incrementos facilitam a familiarização do público com os aspetos técnicos do projeto, permitindo que este contribua duma forma mais célere.
 
 Ao mesmo tempo, este processo também revela alguns inconvenientes, pois ao permitir que as contribuições da comunidade sejam determinadas pela mesma torna-se impossível concentrar os esforços de todos os contribuidores no sentido de alcançar alguma milestone específica. Desta forma, no contexto do projeto em análise torna-se particularmente importante que a empresa que está por detrás do mesmo dirija os esforços dos seus trabalhadores no sentido de colmatar as falhas e desenvolver as funcionalidades essenciais que não estejam a ser cobertas pelas restantes contribuições. O sucesso do projeto fica assim algo condicionado ao interesse que a empresa revelar pelo mesmo.
+
+<br/>
+
+#### Trabalho realizado por:
+
+* Ana Casimiro - anacasimiro1995@gmail.com
+* João Bernardino - joao.mnb@gmail.com
+* João Cabral - up201304395@fe.up.pt
+* João Mota - up201303462@fe.up.pt
