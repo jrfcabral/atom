@@ -34,7 +34,7 @@ Dadas as frequentes atualizações do programa, é da opinião deste grupo que o
 empregue neste projeto é o "Incremental development and delivery".
 Características deste modelo incluem a frequência de atualizações do produto, bem como o facto de a maior parte dos incrementos feitos ao projeto serem imediatamente utilizáveis. Estas características parecem evidentes no contexto do Atom.
 
-(Faltam justificações)
+Analisando a atividade atual visível no repositório do projeto é possível compreender a natureza essencialmente iterativa do processo de engenharia de software que está a ser aplicado. Com efeito a maior parte dos pull requests e commits efetuados prendem-se com pequenas melhorias de comportamento do programa ou correções de comportamentos detetados como anomalos. Não é visível uma grande quantidade de funcionalidades novas ou alterações significativas ao comportamento do programa.
 
 ## Análise crítica
 No âmbito dum projeto open-source, Incremental development and delivery é bom modelo a aplicar, pois permite usufruir da acessibilidade do público ao produto.
