@@ -22,7 +22,7 @@ Este projeto, inicialmente batizado "Atomicity", começou como um projeto pessoa
 [Chris Wanstrath](https://github.com/defunkt) em meados de 2008. No entanto, de forma a
 poder focar-se no seu projeto principal, [GitHub.com](http://github.com), Atomicity foi posto de parte. Foi apenas em agosto de 2011 que o projeto voltou a ficar ativo, com Wanstrath e [Corey Johnson](https://github.com/probablycorey) a trabalharem no mesmo nos seus tempos livres. Em novembro de 2011, Atomicity foi renomeado "Atom", como é hoje conhecido, e em dezembro do mesmo ano, [Nathan Sobo](https://github.com/nathansobo) juntou-se à GitHub para traballhar no editor de texto a tempo inteiro. A 26 de fevereiro de 2014 começa o Beta, aberto ao público, e é no mesmo dia que começa a abertura do projeto ao público com o lançamento de várias bibliotecas e pacotes utilizadas no mesmo. Atom torna-se completamente aberto ao público a 6 de maio 2014 e a 25 de junho de 2015, Atom é oficialmente lançado na sua versão 1.0.
 
-### Estado da Arte
+### Estado atual do Projeto
 Hoje em dia, grande parte das atualizações feitas ao Atom consistem de bugfixes, com algumas otimizações e melhorias de algumas funcionalidades.
 
 
