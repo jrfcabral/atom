@@ -6,7 +6,7 @@
 O [Atom](https://atom.io/) é um programa de edição de texto [open-source](https://github.com/atom/atom).
 O objetivo do programa é proporcionar aos utilizadores um editor de texto que tenha à partida
 todas as capacidades que são esperadas de um editor moderno,
-permitindo-lhes sinultaneamente um controlo o mais completo possível sobre as
+permitindo-lhes simultaneamente um controlo o mais completo possível sobre as
 funcionalidades implementadas, por forma a que seja fácil
 alterá-las. Daí o seu moto: "A hackable text editor
 for the 21st Century".
@@ -15,7 +15,7 @@ Para facilitar a gestão e a partilha das modificações, o Atom vem
 equipado com um gestor de pacotes. As funcionalidades base, como os realces
 de sintaxe e as ferramentas de sugestão automática de texto, são implementadas
 como pacotes independentes. O próprio aspeto gráfico da aplicação é também um
-pacote, o que faz com que tudo isto seja completamente personalizável.
+pacote, o que faz com que a interface seja completamente personalizável.
 
 O Atom possui também uma comunidade ativa, a qual desenvolve pacotes dotados das mais variadas funcionalidades, tomando assim o máximo proveito do conceito de open-source.
 
@@ -37,19 +37,16 @@ Como foi referido acima, o Atom começou como um projeto pessoal e secundário. 
 
 Dadas as frequentes atualizações do programa, é da opinião deste grupo que o processo
 empregue neste projeto é o "Incremental development and delivery".
-Características deste modelo incluem a frequência de atualizações do produto, bem como o facto de a maior parte dos incrementos feitos ao projeto serem imediatamente utilizáveis. Isto deve-se ao facto de todo o desenvolvimento ser dividido em pequenas partes. Cada uma destas partes passa pelas fases de design, desenvolvimento, testes e implementação. A aplicação vai então sendo desenvolvida passo a passo, módulo a módulo, estando sempre funcional, à medida que vão sendo acrescentadas funcionalidades.
+Características deste modelo incluem a frequência de atualizações do produto, bem como a posibilidade de utilizar imediatamente todas as alterações feitas. Isto deve-se ao facto de todo o desenvolvimento ser dividido em pequenas partes. Cada uma destas partes passa pelas fases de design, desenvolvimento, testes e implementação. A aplicação vai então sendo desenvolvida passo a passo, módulo a módulo, estando sempre funcional, à medida que vão sendo acrescentadas funcionalidades.
 
 <img src="Resources/graphs.png" alt="Commits Activity" />
 
-<<<<<<< HEAD
 Como podemos ver pelo gráfico, o projeto encontra-se ainda
 ativo, com uma média de 111 commits por semana, desde 12 de outubro de 2014 até
 ao dia de hoje, com um total de mais de 25 000 commits desde o primórdio.
 É de salientar que após o lançamento final do Atom, a quantidade de commits tem
 vindo a diminuir, no entanto, sem perder a sua atividade.
-=======
-Analisando a atividade atual visível no repositório do projeto é possível compreender a natureza essencialmente iterativa do processo de engenharia de software que está a ser aplicado. Com efeito a maior parte dos pull requests e commits efetuados prendem-se com pequenas melhorias de comportamento do programa ou correções de comportamentos detetados como anomalos. Não é visível uma grande quantidade de funcionalidades novas ou alterações significativas ao comportamento do programa.
->>>>>>> Relatorio
+
 
 ## Análise crítica
 No âmbito dum projeto open-source, Incremental development and delivery é bom modelo a aplicar, pois permite usufruir da acessibilidade do público ao produto.
