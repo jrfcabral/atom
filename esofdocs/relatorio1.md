@@ -28,7 +28,7 @@ Este projeto, inicialmente batizado "Atomicity", começou como um projeto pessoa
 [Chris Wanstrath](https://github.com/defunkt) em meados de 2008. No entanto, de forma a
 poder focar-se no seu projeto principal, [GitHub.com](http://github.com), Atomicity foi posto de parte. Foi apenas em agosto de 2011 que o projeto voltou a ficar ativo, com Wanstrath e [Corey Johnson](https://github.com/probablycorey) a trabalharem no mesmo nos seus tempos livres. Em novembro de 2011, Atomicity foi renomeado "Atom", como é hoje conhecido, e em dezembro do mesmo ano, [Nathan Sobo](https://github.com/nathansobo) juntou-se à GitHub para traballhar no editor de texto a tempo inteiro. A 26 de fevereiro de 2014 é lançada a versão Beta, aberta ao público, sendo também publicado o código fonte do projeto, incluindo várias bibliotecas e pacotes utilizados no mesmo. Atom torna-se completamente aberto ao público a 6 de maio 2014 e é oficialmente lançado na sua versão 1.0 a 25 de junho de 2015.
 
-### Estado da Arte
+### Estado atual do Projeto
 Hoje em dia, grande parte das atualizações feitas ao Atom consistem de bugfixes, com algumas otimizações e melhorias de algumas funcionalidades.
 
 
@@ -41,11 +41,15 @@ Características deste modelo incluem a frequência de atualizações do produto
 
 <img src="Resources/graphs.png" alt="Commits Activity" />
 
+<<<<<<< HEAD
 Como podemos ver pelo gráfico, o projeto encontra-se ainda
 ativo, com uma média de 111 commits por semana, desde 12 de outubro de 2014 até
 ao dia de hoje, com um total de mais de 25 000 commits desde o primórdio.
 É de salientar que após o lançamento final do Atom, a quantidade de commits tem
 vindo a diminuir, no entanto, sem perder a sua atividade.
+=======
+Analisando a atividade atual visível no repositório do projeto é possível compreender a natureza essencialmente iterativa do processo de engenharia de software que está a ser aplicado. Com efeito a maior parte dos pull requests e commits efetuados prendem-se com pequenas melhorias de comportamento do programa ou correções de comportamentos detetados como anomalos. Não é visível uma grande quantidade de funcionalidades novas ou alterações significativas ao comportamento do programa.
+>>>>>>> Relatorio
 
 ## Análise crítica
 No âmbito dum projeto open-source, Incremental development and delivery é bom modelo a aplicar, pois permite usufruir da acessibilidade do público ao produto.
