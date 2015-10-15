@@ -3,6 +3,8 @@
 <img src="Resources/logo.png" width="300px" alt="Atom"/>
 
 ## Levantamento de requisitos
+
+### Inicial
 Dadas as circunstâncias sob as quais surgiu o projeto, explicadas em mais detalhe no primeiro relatório, o levantamento de requisitos foi baseado na experiência pessoal 
 do primeiro programador do projeto, Chris Wanstrath.
 
@@ -12,10 +14,18 @@ Destes requisitos destacam-se os seguintes, por serem instrumentais na definiç�
 * Deve ser possível, virtude das tecnologias web utilizadas, que todas as funcionalidades sejam alteradas facilmente
 * Deve ser fácil de utilizar
 
-Do acima mencionado decorre é possível concluir que, no contexto do que tradicionalmente se define como levantamento de requisitos em Engenharia de Software, ocorre,
-no que ao Atom diz respeito, uma sobreposição dos papeis tipicamente associados ao do cliente e do engenheiro de software. Conforme se pode
+Do acima mencionado decorre é possível concluir que, no contexto do que tradicionalmente se define como levantamento de requisitos em Engenharia de Software, ocorreu,
+no que ao Atom diz respeito, uma sobreposição dos papeis tipicamente associados ao do cliente e do engenheiro de software. Esta sobreposição fica particularmente clara
+na forma como a equipa fala sobre a origem seu projeto em [1](#ref1), sendo esta caracteristica do precesso inicial de levantamento de requisitos tornada particularmente
+clara na seguinte afirmação:
 
-[You can use numbers for reference-style link definitions][1]
+> Atom started as a side project of GitHub founder @defunkt (Chris Wanstrath) way back in mid 2008, almost exactly seven years ago. He called it Atomicity. 
+> **His dream was to use web technologies to build something as customizable as Emacs and give a new generation of developers total control over their editor**.
+
+#### Dos *Business Needs* aos *System Requirements* <sup>[2](#ref2)</sup>
+Os requisitos até agora listados são uma análise não sistematizada nem formalizada das necessidades identificadas pelo cliente. Não foi possível, analisando 
+a documentação disponível ou pela fala com os desenvolvedores do projeto, chegar aos requisitos de sistema identificados. Como exercicio de engenharia de
+ software segue pois uma hipotética lista de requisitos formalizados que poderiam ter sido utilizados 
 
 ### *Issues* do GitHub
 O projeto usa a interface de issues do GitHub para recolher os diversos problemas e solicitações de funcionalidades que vão sendo formuladas pelos utilizadores do programa.
@@ -29,7 +39,8 @@ Qualquer membro da comunidade de desenvolvimento do Atom pode trabalhar em qualq
 A equipa principal, contudo, foca-se em resolver os assuntos levantados na reunião supramencionada, cujos *Issues* correspondentes estão marcados com uma *tag* especial que os assinala como prioritários.
 
 ### Análise dos Resultados
-Esta abordagem parece permitir à equipa responder de forma eficaz às solicitações de requisitos por parte da comunidade. No mês anterior, por exemplo, a equipa conseguiu responder a mais de metade dos *issues* abertos pela comunidade, conforme ilustrado na figura abaixo.
+Esta abordagem parece permitir à equipa responder de forma eficaz às solicitações de requisitos por parte da comunidade. No mês anterior, 
+por exemplo, a equipa conseguiu responder a mais de metade dos *issues* abertos pela comunidade, conforme ilustrado na figura abaixo.
 
 <img src="Resources/issues.png" width="500px" alt="Atom"/>
 
@@ -55,4 +66,5 @@ Adicionalmente, todos os problemas que sejam introduzidos, malogrado o mecanismo
  são priorizados para correção nas reuniões semanais do projeto.
 
 ## Referências
-<a name="ref1" href="http://blog.atom.io/2015/06/25/atom-1-0.html">Atom 1.0</a>
+<a name="ref1" href="http://blog.atom.io/2015/06/25/atom-1-0.html">1) Atom 1.0</a>
+<a name="ref2" href="https://moodle.up.pt/pluginfile.php/68505/mod_resource/content/2/ESOF-Requirements%20Engineering.pdf">2) 
