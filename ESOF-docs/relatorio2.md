@@ -149,25 +149,50 @@ implementar são efetuadas diretamente no repositório do Atom. Neste repositór
 importa portanto negociar os requisitos solicitados com base em dois critérios:
 o impacto na performance do programa da implementação de novos métodos na API e
 assegurar que as alterações efetuadas mantêm o comportamento correto da API, de
-que dependem as *packages* construídas sobre a mesma.
+que dependem as *packages* construídas sobre a mesma. Este processo será discutido
+mais aprofundadamente na secção que versa sobre [Validação](#val).
 
+A negociação de cada *issue* criado e cada *pull request* é efetuada numa secção
+do mesmo, dedicada a comentários por parte da comunidade. Nela podem ser
+facilmente solicitados esclarecimentos adicionais, e podem ser confirmadas
+reproduções de *bugs*, sendo possível um contacto célere e desformalizado entre
+desenvolvedores e os restantes *stakeholders*.
 
-
-
-### Priorização
+##### Priorização
 Nem todos os problemas levantados pela comunidade merecem, por parte da equipa
 que gere o projeto, a mesma atenção a nível de tempo e recursos. Para fazer a
 triagem e escolher os assuntos sobre os quais a equipa principal do projeto
 se vai focar, a mesma efetua reuniões semanais, todas as segundas-feiras,
 nas quais decide como vai alocar os seus recursos ao longo da semana seguinte.
 
-### Abordagem ao desenvolvimento
-Qualquer membro da comunidade de desenvolvimento do Atom pode trabalhar em
-qualquer um dos requisitos elicitados na secção de *Issues*.
+Os *issues* que sejam identificados como mais relevantes são marcados com uma
+*tag* específica, assinalando que faz parte dos esforços que a equipa principal
+vai desenvolver ao longo da semana.<sup>[[5]](#ref5)</sup>
 
-A equipa principal, contudo, foca-se em resolver os assuntos levantados na
-reunião supramencionada, cujos *Issues* correspondentes estão marcados com uma
-*tag* especial que os assinala como prioritários.
+>We prioritize inbound issues in our team meeting every Monday.
+Anything that gets a special GitHub issue label of `atom` will be
+discussed and prioritized. We try and focus on regressions and get
+hotfixes out quickly.
+
+A importância destas reuniões semanais é acentuada pelo facto de não existir um
+documento oficial de especificação dos requisitos de software que permita delinear
+um percurso claro para o processo de desenvolvimento.
+
+#### <a name="val"></a> Validação
+A validação de requisitos é o processo que permite aferir, relativamente a um
+novo requisito, se o mesmo cumpre os critérios de qualidade e de funcionalidade
+previamente determinados. Tendo em conta que para além de ser um editor de texto
+o Atom é também uma API que fornece funcionalidades a *packages* independentes
+este processo é essencial para garantir que o comportamento dos seus métodos
+se mantém dentro das especificações e do comportamento esperado. Qualquer
+alteração de comportamento inesperada pode implicar que novos *bugs* surjam em
+múltiplas *packages* fornecidas por *third-parties*.
+
+Posto isto é de extrema importância que a validação das alterações a API seja
+efetuada de forma rigorosa, pois o degradamento da qualidade no que diz respeito
+à fiabilidade do sistema seria facilmente posto em causa pela acumulação de
+*bugs* devido a alterações na API, podendo resultar em interrupções de funcionamento
+do editor de texto, ou mesmo, em casos extremos, na perda de documentos.
 
 ### Análise dos Resultados
 Esta abordagem parece permitir à equipa responder de forma eficaz às
@@ -207,4 +232,5 @@ Adicionalmente, todos os problemas que sejam introduzidos, malogrado o mecanismo
 <a name="ref1" href="http://blog.atom.io/2015/06/25/atom-1-0.html">1) Atom 1.0</a><br>
 <a name="ref2" href="https://moodle.up.pt/pluginfile.php/68505/mod_resource/content/2/ESOF-Requirements%20Engineering.pdf">2) Slides da Unidade Curricular<br></a>
 <a name="ref3" href="http://electron.atom.io/">3) Electron</a><br>
-<a name="ref4" href="https://github.com/atom/atom/issues?q=is%3Aopen+is%3Aissue">4) Atom Issues</a>
+<a name="ref4" href="https://github.com/atom/atom/issues?q=is%3Aopen+is%3Aissue">4) Atom Issues</a><br>
+<a name="ref5" href="https://github.com/jrfcabral/atom/blob/master/ESOF-docs/email1.md">5) Email de Kevin Sawicki</a>
