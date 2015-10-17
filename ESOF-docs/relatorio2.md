@@ -16,7 +16,7 @@ sua negociação e validação, passando todo este processo a operar-se sob uma
 ampla plataforma comunitária, que a par da equipa do *GitHub* se revela um dos
 mais importantes *stakeholders* do produto final.
 
-## Inicial
+### Contexto Inicial
 Dadas as circunstâncias sob as quais surgiu o projeto, explicadas em mais detalhe
 no primeiro relatório, o levantamento de requisitos foi baseado na
 experiência pessoal do primeiro programador do projeto, Chris Wanstrath.
@@ -25,10 +25,10 @@ Das necessidades identificadas destacam-se as seguintes, pela influência que
 revelaram ter na descrição dos requisitos do projeto.<sup>[1](#ref1)</sup>:
 
 * O editor de texto deve funcionar por cima de uma interface baseada em
-tecnologias web
+tecnologias web;
 * Deve ser possível, virtude das tecnologias web utilizadas, que todas as
-funcionalidades sejam alteradas facilmente
-* Deve ser fácil de utilizar
+funcionalidades sejam alteradas facilmente;
+* Deve ser fácil de utilizar.
 
 Do acima mencionado decorre que, no contexto do que tradicionalmente se define
 como levantamento de requisitos em Engenharia de Software, ocorreu,
@@ -48,11 +48,13 @@ pormenores técnicos que regra geral não são refletidos no
 Revela-se também de grande importância para a compreensão do processo de levantamento
 de requisitos usado a contextualização do Atom enquanto projeto *open-source*,
 cujas características não-comerciais e de estruturação das equipas de desenvolvimento
-tornam, na nossa perspectiva, dificil a aplicação de modelos convencionais de levantamento
-de requisitos.
+tornam, na nossa perspectiva, dificil a aplicação de modelos convencionais de
+levantamento de requisitos, sendo exigidos novos métodos que permitam abarcar
+a natureza descentralizada e colaborativa dos utilizadores e dos contribuidores
+para o projeto.
 
 
-## Das necessidades aos requisitos <sup>[2](#ref2)</sup>
+## Das necessidades aos requisitos <sup>[2, pg 6](#ref2)</sup>
 Os requisitos até agora listados são uma análise não sistematizada nem
 formalizada das necessidades identificadas pelo cliente. Não foi possível,
 analisando a documentação disponível ou pela fala com os desenvolvedores
@@ -61,10 +63,42 @@ improvavel que, dado o contexto de desenvolvimento inicial, os mesmos tenham
 sido formalizados.
 
 Como exercicio de engenharia de software segue pois uma hipotética lista
-de requisitos formalizados que poderiam ter sido utilizados:
+de requisitos formalizados que poderiam ter sido utilizados, agrupadas por tipo
+<sup>[2, pg 13](#ref2)</sup>:
 
-*
+###### Requisitos Funcionais
+* O programa deve permitir a manipulação de *buffers* de texto.
+* O programa deve providenciar, para o requisito acima, uma interface similar
+a de outros programas comummente utilizados para esta tarefa.
+* O programa deve permitir que a interface de manipulação previamente
+mencionada seja alterada conforme as necessidades do utilizador, garantindo
+flexibilidade na mesma.
+* O programa deve permitir que os *buffers* manipulados ou criados
+sejam gravados em disco, e deve permitir a leitura de buffers gravados
+em disco para que possam ser manipulados.
+* O programa deve permitir a instalação de funcionalidades adicionais
+providenciando ao utilizador um sistema que permita gerir as *packages*,
+contendo as alterações em causa, facilitando o processo de as descarregar,
+ativar/desativar e apagar.
+* O programa deve providenciar suporte a funcionalidades comummente utilizadas
+na área da programação ou manipulação de código, como a indentação automática
+ou o realce sintático de palavras ou segmentos de texto.
+* O programa deve facilitar a edição de multiplos ficheiros, por meio de
+tabulações e de funcionalidades que permitam gerir vários ficheiros em
+simultaneo.
 
+###### Requisitos não Funcionais <sup>[3](#ref3)</sup>
+* Deve ser providenciada aos desenvolvedores de packages uma *framework*
+de interpretação dos programas escritos em *javascript*.
+* A estrutura da interface do programa deve ser especificada em *HTML* e o
+seu aspeto em *CSS*, permitindo a sua interpretação pela *framework*
+supramencionada.
+* A plataforma deve providenciar capacidades que facilitem o desenvolvimento
+do programa, como sejam um *debugger* e um *profiler* de desempenho.
+* Deve permitir a recolha de dados acerca de problemas que tenham levado
+à uma eventual anormal interrupção do programa.
+* Deve facilitar o *deployment* de atualizações, fruto do modelo de iteração
+utilizado para o desenvolvimento do programa.
 
 ### *Issues* do GitHub
 O projeto usa a interface de issues do GitHub para recolher os diversos
@@ -122,4 +156,5 @@ Adicionalmente, todos os problemas que sejam introduzidos, malogrado o mecanismo
 
 ## Referências
 <a name="ref1" href="http://blog.atom.io/2015/06/25/atom-1-0.html">1) Atom 1.0</a><br>
-<a name="ref2" href="https://moodle.up.pt/pluginfile.php/68505/mod_resource/content/2/ESOF-Requirements%20Engineering.pdf">2)
+<a name="ref2" href="https://moodle.up.pt/pluginfile.php/68505/mod_resource/content/2/ESOF-Requirements%20Engineering.pdf">2) Slides da Unidade Curricular<br></a>
+<a name="ref3" href="http://electron.atom.io/">3) Electron</a>
