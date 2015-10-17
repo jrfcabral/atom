@@ -111,8 +111,8 @@ de requisitos: *issues* e *pull requests*. Ambas estas ferramentas estão dispon
 para a equipa do *GitHub* e para o público em geral. Os *issues* servem essencialmente
 para fazer chegar à atenção da comunidade a existência de uma necessidade de alteração.
 Os *issues* podem, grosso modo, ser divididos em duas categorias, os que dizem
-respeito a comportamento anomalo ou incorreto do programa e as que
-solicitam a implementação de nova funcionalidade.
+respeito a comportamento anómalo ou incorreto do programa e as que
+solicitam a implementação de novas funcionalidades.
 
 Os *pull requests* são pedidos de alterações no código-fonte, servindo
 para responder a *issues* previamente identificados ou simplesmente para corrigir
@@ -130,6 +130,11 @@ A abertura ao público em geral do contacto com a equipa de desenvolvimento leva
 à necessidade de uma eficaz filtragem das solicitações, para que as mais relevantes
 não se percam entre o ruído gerado pelo elevado nível de solicitações. Num dado
 momento mais de 1000 *issues* podem estar abertos.<sup>[[4]](#ref4)</sup>
+
+Do anteriormente exposto decorre uma grande necessidade de categorização e
+compartimentalização dos requisitos levantados. O
+
+
 
 ### Priorização
 Nem todos os problemas levantados pela comunidade merecem, por parte da equipa
@@ -158,7 +163,7 @@ abertos pela comunidade, conforme ilustrado na figura abaixo.
 Cabe nesta área efetuar, para cada alteração ao software, uma validação quer do
 cumprimento do problema ou funcionalidade que a alteração procura corrigir ou
 acrescentar, quer da estabilidade estrutural do software, por forma a que não
-seja introduzidos problemas adicionais na tentativa de corrigir problemas
+sejam introduzidos problemas adicionais na tentativa de corrigir problemas
 antigos.
 
 ### Validação do cumprimento
