@@ -22,7 +22,7 @@ no primeiro relatório, o levantamento de requisitos foi baseado na
 experiência pessoal do primeiro programador do projeto, Chris Wanstrath.
 
 Das necessidades identificadas destacam-se as seguintes, pela influência que
-revelaram ter na descrição dos requisitos do projeto.<sup>[1](#ref1)</sup>:
+revelaram ter na descrição dos requisitos do projeto.<sup>[[1]](#ref1)</sup>:
 
 * O editor de texto deve funcionar por cima de uma interface baseada em
 tecnologias web;
@@ -35,7 +35,7 @@ como levantamento de requisitos em Engenharia de Software, ocorreu,
 no que ao Atom diz respeito, uma sobreposição dos papeis tipicamente associados
 ao do cliente e do engenheiro de software. Esta sobreposição fica
 particularmente clara na forma como a equipa fala sobre a origem do seu projeto
-em [1](#ref1):
+em [[1]](#ref1):
 > Atom started as a side project of GitHub founder @defunkt (Chris Wanstrath)
  way back in mid 2008, almost exactly seven years ago. He called it Atomicity.
 > **His dream was to use web technologies to build something as customizable as
@@ -54,7 +54,7 @@ a natureza descentralizada e colaborativa dos utilizadores e dos contribuidores
 para o projeto.
 
 
-## Das necessidades aos requisitos <sup>[2, pg 6](#ref2)</sup>
+#### Das necessidades aos requisitos <sup>[[2, pg 6]](#ref2)</sup>
 Os requisitos até agora listados são uma análise não sistematizada nem
 formalizada das necessidades identificadas pelo cliente. Não foi possível,
 analisando a documentação disponível ou pela fala com os desenvolvedores
@@ -64,7 +64,7 @@ sido formalizados.
 
 Como exercicio de engenharia de software segue pois uma hipotética lista
 de requisitos formalizados que poderiam ter sido utilizados, agrupadas por tipo
-<sup>[2, pg 13](#ref2)</sup>:
+<sup>[[2, pg 13]](#ref2)</sup>:
 
 ###### Requisitos Funcionais
 * O programa deve permitir a manipulação de *buffers* de texto.
@@ -83,11 +83,11 @@ ativar/desativar e apagar.
 * O programa deve providenciar suporte a funcionalidades comummente utilizadas
 na área da programação ou manipulação de código, como a indentação automática
 ou o realce sintático de palavras ou segmentos de texto.
-* O programa deve facilitar a edição de multiplos ficheiros, por meio de
+* O programa deve facilitar a edição de múltiplos ficheiros, por meio de
 tabulações e de funcionalidades que permitam gerir vários ficheiros em
 simultaneo.
 
-###### Requisitos não Funcionais <sup>[3](#ref3)</sup>
+###### Requisitos não Funcionais <sup>[[3]](#ref3)</sup>
 * Deve ser providenciada aos desenvolvedores de packages uma *framework*
 de interpretação dos programas escritos em *javascript*.
 * A estrutura da interface do programa deve ser especificada em *HTML* e o
@@ -100,10 +100,36 @@ do programa, como sejam um *debugger* e um *profiler* de desempenho.
 * Deve facilitar o *deployment* de atualizações, fruto do modelo de iteração
 utilizado para o desenvolvimento do programa.
 
-### *Issues* do GitHub
-O projeto usa a interface de issues do GitHub para recolher os diversos
-problemas e solicitações de funcionalidades que vão sendo formuladas pelos
- utilizadores do programa.
+### Contexto Atual
+Atualmente a situação do projeto é vastamente diferente das circunstâncias em
+que surgiu. O modelo open-source coloca diversos desafios no que à gestão
+de requisitos diz respeito. Os métodos tradicionais da Engenharia de Software
+não podem assim ser mapeados com facilidade à especificidade do projeto.
+
+Atualmente existem duas ferramentas principais utilizadas para fazer a elicitação
+de requisitos: *issues* e *pull requests*. Ambas estas ferramentas estão disponíveis
+para a equipa do *GitHub* e para o público em geral. Os *issues* servem essencialmente
+para fazer chegar à atenção da comunidade a existência de uma necessidade de alteração.
+Os *issues* podem, grosso modo, ser divididos em duas categorias, os que dizem
+respeito a comportamento anomalo ou incorreto do programa e as que
+solicitam a implementação de nova funcionalidade.
+
+Os *pull requests* são pedidos de alterações no código-fonte, servindo
+para responder a *issues* previamente identificados ou simplesmente para corrigir
+*bugs* detetados e corrigidos pela pessoa que envia o *pull request*.
+
+O modelo aberto acima descrito e os elevados níveis de interesse que o projeto
+suscita levam a uma massificação da quantidade de requisitos levantados.
+Consequentemente a **negociação e análise** dos requisitos levantados assume
+uma importância ainda maior do que a que já lhe cabe na Engenharia de
+Software tradicional. Se a mesma continua a ser necessária para assegurar que
+o esforço de desenvolvimento se dirige para áreas tecnicamente exequiveis e
+funcionalmente vantajosas, aqui assume ainda um papel decisivo na filtragem
+da qualidade dos pedidos efetuados e da sua adequação aos objetivos do projeto.
+A abertura ao público em geral do contacto com a equipa de desenvolvimento leva
+à necessidade de uma eficaz filtragem das solicitações, para que as mais relevantes
+não se percam entre o ruído gerado pelo elevado nível de solicitações. Num dado
+momento mais de 1000 *issues* podem estar abertos.<sup>[[4]](#ref4)</sup>
 
 ### Priorização
 Nem todos os problemas levantados pela comunidade merecem, por parte da equipa
@@ -157,4 +183,5 @@ Adicionalmente, todos os problemas que sejam introduzidos, malogrado o mecanismo
 ## Referências
 <a name="ref1" href="http://blog.atom.io/2015/06/25/atom-1-0.html">1) Atom 1.0</a><br>
 <a name="ref2" href="https://moodle.up.pt/pluginfile.php/68505/mod_resource/content/2/ESOF-Requirements%20Engineering.pdf">2) Slides da Unidade Curricular<br></a>
-<a name="ref3" href="http://electron.atom.io/">3) Electron</a>
+<a name="ref3" href="http://electron.atom.io/">3) Electron</a><br>
+<a name="ref4" href="https://github.com/atom/atom/issues?q=is%3Aopen+is%3Aissue">4) Atom Issues</a>
