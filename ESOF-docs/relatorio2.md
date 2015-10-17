@@ -5,14 +5,24 @@
 ## Levantamento de requisitos
 Para uma compreensão detalhada do processo de levantamento de requisitos utilizados
 no projeto torna-se vital compreender e distinguir as duas principais fases de
-desenvolvimento do mesmo
-##Inicial
+desenvolvimento do mesmo. Com efeito, o Atom começou a sua existência como
+um projeto inspirado na visão do seu criados e único programador, tendo
+sido eventualmente posto de parte pelo mesmo.
+
+Apenas mais tarde seria o projeto retomado, desta vez pela empresa *GitHub*,
+que adotou o modelo de *open-source* que atualmente o caracteriza. Esta adoção
+operou uma mudança significativa nas metodologias de levantamento de requisitos e
+sua negociação e validação, passando todo este processo a operar-se sob uma
+ampla plataforma comunitária, que a par da equipa do *GitHub* se revela um dos
+mais importantes *stakeholders* do produto final.
+
+## Inicial
 Dadas as circunstâncias sob as quais surgiu o projeto, explicadas em mais detalhe
 no primeiro relatório, o levantamento de requisitos foi baseado na
 experiência pessoal do primeiro programador do projeto, Chris Wanstrath.
 
-Destes requisitos destacam-se os seguintes, por serem instrumentais na definição
- dos tipos de requisitos que têm vindo a ser solicitados<sup>[1](#ref1)</sup>:
+Das necessidades identificadas destacam-se as seguintes, pela influência que
+revelaram ter na descrição dos requisitos do projeto.<sup>[1](#ref1)</sup>:
 
 * O editor de texto deve funcionar por cima de uma interface baseada em
 tecnologias web
@@ -21,28 +31,39 @@ funcionalidades sejam alteradas facilmente
 * Deve ser fácil de utilizar
 
 Do acima mencionado decorre que, no contexto do que tradicionalmente se define
- como levantamento de requisitos em Engenharia de Software, ocorreu,
+como levantamento de requisitos em Engenharia de Software, ocorreu,
 no que ao Atom diz respeito, uma sobreposição dos papeis tipicamente associados
- ao do cliente e do engenheiro de software. Esta sobreposição fica
- particularmente clara na forma como a equipa fala sobre a origem do seu projeto
-  em [1](#ref1):
+ao do cliente e do engenheiro de software. Esta sobreposição fica
+particularmente clara na forma como a equipa fala sobre a origem do seu projeto
+em [1](#ref1):
 > Atom started as a side project of GitHub founder @defunkt (Chris Wanstrath)
  way back in mid 2008, almost exactly seven years ago. He called it Atomicity.
 > **His dream was to use web technologies to build something as customizable as
  Emacs and give a new generation of developers total control over their editor**.
 
+Um dos efeitos mais notáveis desta sobreposição é o facto de se encontrar, neste
+contexto, referências às tecnologias particulares a serem utilizadas,
+pormenores técnicos que regra geral não são refletidos no
+
 Revela-se também de grande importância para a compreensão do processo de levantamento
 de requisitos usado a contextualização do Atom enquanto projeto *open-source*,
 cujas características não-comerciais e de estruturação das equipas de desenvolvimento
+tornam, na nossa perspectiva, dificil a aplicação de modelos convencionais de levantamento
+de requisitos.
 
 
-#### Dos *Business Needs* aos *System Requirements* <sup>[2](#ref2)</sup>
+## Das necessidades aos requisitos <sup>[2](#ref2)</sup>
 Os requisitos até agora listados são uma análise não sistematizada nem
 formalizada das necessidades identificadas pelo cliente. Não foi possível,
 analisando a documentação disponível ou pela fala com os desenvolvedores
-do projeto, chegar aos requisitos de sistema identificados. Como exercicio
- de engenharia de software segue pois uma hipotética lista de requisitos
- formalizados que poderiam ter sido utilizados:
+do projeto, chegar aos requisitos de sistema identificados. É aliás altamente
+improvavel que, dado o contexto de desenvolvimento inicial, os mesmos tenham
+sido formalizados.
+
+Como exercicio de engenharia de software segue pois uma hipotética lista
+de requisitos formalizados que poderiam ter sido utilizados:
+
+*
 
 
 ### *Issues* do GitHub
