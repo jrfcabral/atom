@@ -106,6 +106,8 @@ que surgiu. O modelo open-source coloca diversos desafios no que à gestão
 de requisitos diz respeito. Os métodos tradicionais da Engenharia de Software
 não podem assim ser mapeados com facilidade à especificidade do projeto.
 
+#### Elicitação de requisitos
+
 Atualmente existem duas ferramentas principais utilizadas para fazer a elicitação
 de requisitos: *issues* e *pull requests*. Ambas estas ferramentas estão disponíveis
 para a equipa do *GitHub* e para o público em geral. Os *issues* servem essencialmente
@@ -117,6 +119,8 @@ solicitam a implementação de novas funcionalidades.
 Os *pull requests* são pedidos de alterações no código-fonte, servindo
 para responder a *issues* previamente identificados ou simplesmente para corrigir
 *bugs* detetados e corrigidos pela pessoa que envia o *pull request*.
+
+#### Negociação e análise
 
 O modelo aberto acima descrito e os elevados níveis de interesse que o projeto
 suscita levam a uma massificação da quantidade de requisitos levantados.
@@ -132,7 +136,21 @@ não se percam entre o ruído gerado pelo elevado nível de solicitações. Num 
 momento mais de 1000 *issues* podem estar abertos.<sup>[[4]](#ref4)</sup>
 
 Do anteriormente exposto decorre uma grande necessidade de categorização e
-compartimentalização dos requisitos levantados. O
+compartimentalização dos requisitos levantados. A expansibilidade do Atom, com
+recurso a *packages* permite que muita da funcionalidade de base seja implementada
+sob a forma da sua própria *package* independente. Esta constitui aparentemente
+a primeira linha de categorização e separação dos requisitos, já que cada *package*
+conta com o seu próprio repositório e a sua própria lista de *issues* e *pull
+requests*. As *packages* que implementam a funcionalidade base e que são geridas
+diretamente pela equipa do Atom são designadas por *core packages*.
+
+Requisitos que digam respeito à API do Atom, que é usada pelas *packages* para
+implementar são efetuadas diretamente no repositório do Atom. Neste repositório
+importa portanto negociar os requisitos solicitados com base em dois critérios:
+o impacto na performance do programa da implementação de novos métodos na API e
+assegurar que as alterações efetuadas mantêm o comportamento correto da API, de
+que dependem as *packages* construídas sobre a mesma.
+
 
 
 
