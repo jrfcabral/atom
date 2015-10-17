@@ -1,7 +1,11 @@
----------- Forwarded message ----------
+---------- Forwarded message ---------
+
 From: Kevin Sawicki (GitHub Staff) <support@github.com>
+
 Date: Wed, Oct 7, 2015 at 8:32 PM
+
 Subject: Re: Software Engineering Project
+
 To: João Mota <redacted>
 
 
