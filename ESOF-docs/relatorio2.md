@@ -230,10 +230,10 @@ daqueles que são abordados nas aulas da Unidade Curricular de Engenharia de Sof
 Com efeito, a natureza open-source e aberta do projeto e a dimensão da sua
 base de utilização e a diversidade de casos de uso que a implementação de uma
 API para *packages* de desenvolvedores externos à equipa central permite torna
-extremamente dificil que a elicitação de requisitos se processe pelos métodos
+extremamente difícil que a elicitação de requisitos se processe pelos métodos
 tradicionais.
 
-Pelas caracteristicas acima explicadas da base de utilizadores do projeto seria
+Pelas características acima explicadas da base de utilizadores do projeto seria
 extremamente complicada a aplicação de técnicas de entrevista que permitissem
 chegar a uma opinião representativa da maioria dos utilizadores.<sup>[[2, pg 35]](#ref2)</sup>
 
