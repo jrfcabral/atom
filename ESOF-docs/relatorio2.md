@@ -4,7 +4,7 @@
 
 ## Levantamento de requisitos
 Para uma compreensão detalhada do processo de levantamento de requisitos utilizado
-no projeto torna-se vital compreender e distinguir as duas principais fases de
+no projeto, torna-se vital compreender e distinguir as duas principais fases de
 desenvolvimento do mesmo. Com efeito, o Atom começou a sua existência como
 um projeto inspirado na visão do seu criador e único programador, tendo
 sido eventualmente posto de parte pelo mesmo.
@@ -18,8 +18,8 @@ mais importantes *stakeholders* do produto final.
 
 ### Contexto Inicial
 Dadas as circunstâncias sob as quais surgiu o projeto, explicadas em mais detalhe
-no primeiro relatório, o levantamento de requisitos foi baseado na
-experiência pessoal do primeiro programador do projeto, Chris Wanstrath.
+no [primeiro relatório](./relatorio1.md), o levantamento de requisitos foi baseado na
+experiência pessoal do primeiro programador do projeto, [Chris Wanstrath](https://github.com/defunkt).
 
 Das necessidades identificadas destacam-se as seguintes, pela influência que
 revelaram ter na descrição dos requisitos do projeto.<sup>[[1]](#ref1)</sup>:
@@ -36,7 +36,7 @@ no que ao Atom diz respeito, uma sobreposição dos papeis tipicamente associado
 ao do cliente e do engenheiro de software. Esta sobreposição fica
 particularmente clara na forma como a equipa fala sobre a origem do seu projeto
 em [[1]](#ref1):
-> Atom started as a side project of GitHub founder @defunkt (Chris Wanstrath)
+> Atom started as a side project of GitHub founder [@defunkt (Chris Wanstrath)(https://github.com/defunkt)]
  way back in mid 2008, almost exactly seven years ago. He called it Atomicity.
 > **His dream was to use web technologies to build something as customizable as
  Emacs and give a new generation of developers total control over their editor**.
@@ -58,12 +58,12 @@ para o projeto.
 Os requisitos até agora listados são uma análise não sistematizada nem
 formalizada das necessidades identificadas pelo cliente. Não foi possível,
 analisando a documentação disponível ou pela comunicação com os responsáveis
-pelo projeto, chegar aos requisitos de sistema identificados. É aliás altamente
+pelo projeto, chegar aos requisitos de sistema identificados. É, aliás, altamente
 improvável que, dado o contexto de desenvolvimento inicial, os mesmos tenham
 sido formalizados.
 
 Como exercício de engenharia de software segue pois uma hipotética lista
-de requisitos formalizados que poderiam ter sido utilizados, agrupadas por tipo
+de requisitos formalizados que poderiam ter sido utilizados, agrupada por tipo
 <sup>[[2, pg 13]](#ref2)</sup>:
 
 ###### Requisitos Funcionais
@@ -83,7 +83,7 @@ ativar/desativar e apagar.
 * O programa deve providenciar suporte a funcionalidades comummente utilizadas
 na área da programação ou manipulação de código, como a indentação automática
 ou o realce sintático de palavras ou segmentos de texto.
-* O programa deve facilitar a edição de múltiplos ficheiros em simultaneo, por meio de
+* O programa deve facilitar a edição de múltiplos ficheiros em simultâneo, por meio de
 tabulações e outras funcionalidades.
 
 ###### Requisitos não Funcionais <sup>[[3]](#ref3)</sup>
@@ -100,8 +100,8 @@ a uma eventual anormal interrupção do programa.
 utilizado para o desenvolvimento do programa.
 
 ### Contexto Atual
-Atualmente a situação do projeto é vastamente diferente das circunstâncias em
-que surgiu. O modelo open-source coloca diversos desafios no que à gestão
+Atualmente, a situação do projeto é vastamente diferente das circunstâncias em
+que surgiu. O modelo *open-source* coloca diversos desafios no que à gestão
 de requisitos diz respeito. Os métodos tradicionais da Engenharia de Software
 não podem assim ser mapeados com facilidade à especificidade do projeto.
 
