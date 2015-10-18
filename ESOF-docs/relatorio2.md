@@ -43,7 +43,7 @@ em [[1]](#ref1):
 
 Um dos efeitos mais notáveis desta sobreposição é o facto de se encontrar, neste
 contexto, referências às tecnologias particulares a serem utilizadas,
-pormenores técnicos que regra geral não são refletidos no
+pormenores técnicos que, regra geral, não são providenciados quando lidando com clientes com uma compreensão e conhecimento das tecnologias e técnicas necessárias à elaboração de software limitados.
 
 Revela-se também de grande importância para a compreensão do processo de levantamento
 de requisitos usado a contextualização do Atom enquanto projeto *open-source*,
