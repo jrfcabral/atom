@@ -99,6 +99,9 @@ a uma eventual anormal interrupção do programa.
 * Deve facilitar o *deployment* de atualizações, fruto do modelo de iteração
 utilizado para o desenvolvimento do programa.
 
+#### Diagrama de Casos de Uso
+<img src="https://raw.githubusercontent.com/jrfcabral/atom/master/ESOF-docs/Resources/UseCaseAtom.jpg">
+
 ### Contexto Atual
 Atualmente, a situação do projeto é vastamente diferente das circunstâncias em
 que surgiu. O modelo *open-source* coloca diversos desafios no que à gestão
@@ -177,55 +180,85 @@ A importância destas reuniões semanais é acentuada pelo facto de não existir
 documento oficial de especificação dos requisitos de software que permita delinear
 um percurso claro para o processo de desenvolvimento.
 
-#### <a name="val"></a> Validação
+#### <a name="val"></a> Validação de requisitos
 A validação de requisitos é o processo que permite aferir, relativamente a um
-novo requisito, se o mesmo cumpre os critérios de qualidade e de funcionalidade
-previamente determinados. Tendo em conta que para além de ser um editor de texto
+novo requisito, se o mesmo corresponde ao sistema que o cliente efetivamente
+pretende<sup>[[2, pg 31]](#ref2)</sup>. No caso do Atom, como de muitos outros
+projetos *open-source* o papel do cliente é desempenhado pela mesma equipa a quem
+cabe a validação dos requisitos. Assim é o próprio cliente que é responsável
+por assegurar que os requisitos que traça correspondem às suas reais
+necessidades.
+
+Tendo em conta que para além de ser um editor de texto
 o Atom é também uma API que fornece funcionalidades a *packages* independentes
 este processo é essencial para garantir que o comportamento dos seus métodos
-se mantém dentro das especificações e do comportamento esperado. Qualquer
-alteração de comportamento inesperada pode implicar que novos *bugs* surjam em
-múltiplas *packages* fornecidas por terceiros.
+se mantém dentro das especificações. Qualquer alteração de comportamento
+inesperada pode implicar que novos *bugs* surjam em múltiplas *packages*
+fornecidas por terceiros. Pode-se pois considerar que a necessidade central
+do cliente é a existência de uma API bem especificada e estável.
 
-Posto isto, é de extrema importância que a validação das alterações à API seja
-efetuada de forma rigorosa, pois o degradamento da qualidade no que diz respeito
-à fiabilidade do sistema seria facilmente posto em causa pela acumulação de
-*bugs* devido a alterações na API, podendo resultar em interrupções de funcionamento
+Posto isto, é de extrema importância que a validação dos novos requisitos
+cuja implementação implique alterações à API seja efetuada de forma rigorosa,
+pois o degradamento da qualidade no que diz respeito à fiabilidade do sistema
+seria facilmente posto em causa pela acumulação de *bugs* devidos a alterações
+na API, podendo resultar em interrupções de funcionamento
 do editor de texto, ou mesmo, em casos extremos, na perda de documentos.
 
-### Análise dos Resultados
-Esta abordagem parece permitir à equipa responder de forma eficaz às
-solicitações de requisitos por parte da comunidade. No mês anterior,
-por exemplo, a equipa conseguiu responder a mais de metade dos *issues*
-abertos pela comunidade, conforme ilustrado na figura abaixo.
+O Atom implementa, em primeira instância, a validação dos seus requisitos ao
+nível da discussão que é feita em cada *issue* novo que surge. O processo
+de categorização, implementado em larga medida pela equipa de desenvolvedores
+principais permite rapidamente categorizar os pedidos que não passam de meras
+correções de *bugs*, não suscetíveis de provocar alterações indesejáveis
+ao nível da estabilidade.
 
-<img src="Resources/issues.png" width="500px" alt="Atom"/>
+A segunda instância de validação de requisitos ocorre ao nível da interface
+de *pull requests*. O projeto faz uso de uma plataforma de testes, a *Travis CI*,
+integrada na funcionalidade do GitHub que valida automaticamente cada *pull request*,
+assegurando que cumpre a especificação testada por um conjunto de casos de teste.
+Para além disso é também possível ao desenvolvedor de cada *package* usar esta
+plataforma para efetuar testes ao seu software.<sup>[[6]](#ref6)</sup>.
 
-## Validação de requisitos
-Cabe nesta área efetuar, para cada alteração ao software, uma validação quer do
-cumprimento do problema ou funcionalidade que a alteração procura corrigir ou
-acrescentar, quer da estabilidade estrutural do software, por forma a que não
-sejam introduzidos problemas adicionais na tentativa de corrigir problemas
-antigos.
+É possível que, malogradas todas as precauções de validação acima detalhadas,
+um novo requisito provoque alterações indesejadas ao comportamento da API,
+deixando o programa de corresponder ao sistema desejado pelo cliente. Neste caso
+os vários *stakeholders* do projeto podem expressar o problema criado usando
+a interface de *issues* previamente detalhada.
 
-### Validação do cumprimento
+## Conclusão
+Os métodos de gestão de requisitos aplicados ao projeto diferem de forma significativa
+daqueles que são abordados nas aulas da Unidade Curricular de Engenharia de Software.
+Com efeito, a natureza open-source e aberta do projeto e a dimensão da sua
+base de utilização e a diversidade de casos de uso que a implementação de uma
+API para *packages* de desenvolvedores externos à equipa central permite torna
+extremamente difícil que a elicitação de requisitos se processe pelos métodos
+tradicionais.
 
-Tomando proveito da comunidade existente à volta do projeto, a equipa de
-desenvolvimento do Atom consegue lançar novas funcionalidades, bem como
-*bugfixes*, recebendo *feedback* muito mais celeremente do que seria possível
-em projectos privados. Assim acabam por ser os próprios *stakeholders* a validar
-que os problemas estão efetivamente corrigidos, não existindo, aparentemente, um mecanismo
-formal que efetue esta verificação por parte da equipa de desenvolvimento.
+Pelas características acima explicadas da base de utilizadores do projeto seria
+extremamente complicada a aplicação de técnicas de entrevista que permitissem
+chegar a uma opinião representativa da maioria dos utilizadores.<sup>[[2, pg 35]](#ref2)</sup>
 
-### Validação da retro-funcionalidade
+Por outro lado devem ser consideradas as fragilidades do método de
+aplicação de questionários aos utilizadores. Devido à sua estrutura fechada
+este método de elicitação de requisitos revela-se de utilidade limitada
+para o levantamento de requisitos novos ou
+inovadores.<sup>[[2, pg 37]](#ref2)</sup>
 
-É vital que as correções que vão sendo introduzidas provoquem o mínimo de problemas
- possível nas componentes já desenvolvidas. Para permitir detetar estes problemas mais
-facilmente o projeto usa funcionalidades do GitHub que permitem assegurar que cada *pull
-request* passa uma *suite* de testes unitários.
+A metodologia pode ser interpretada como uma alteração do método de brainstorming.<sup>[[2, pg 36]](#ref2)</sup>
+É um processo aberto à comunidade em geral onde todas as ideias têm uma plataforma
+para a sua expressão ao público. O processo de combinação e melhoramento de [ideias
+ocorre livremente](https://github.com/atom/tree-view/issues/55), possibilitando
+o aparecimento de novos requisitos de uma forma intuitiva e natural. Contudo o
+processo não ocorre num contexto limitado no tempo e a critica pode surgir em
+qualquer ponto do processo, já que de outra forma se correria o risco de perder
+tempo em discussões espúrias ou em sugestões manifestamente irrealistas ou que
+revelem desconhecimento sobre o projeto.
 
-Adicionalmente, todos os problemas que sejam introduzidos, malogrado o mecanismo de prevenção supracitado,
- são priorizados para correção nas reuniões semanais do projeto.
+#### Trabalho realizado por:
+
+* Ana Casimiro - anacasimiro1995@gmail.com
+* João Bernardino - joao.mnb@gmail.com
+* João Cabral - up201304395@fe.up.pt
+* João Mota - up201303462@fe.up.pt
 
 ## Referências
 <a name="ref1" href="http://blog.atom.io/2015/06/25/atom-1-0.html">1) Atom 1.0</a><br>
@@ -233,3 +266,4 @@ Adicionalmente, todos os problemas que sejam introduzidos, malogrado o mecanismo
 <a name="ref3" href="http://electron.atom.io/">3) Electron</a><br>
 <a name="ref4" href="https://github.com/atom/atom/issues?q=is%3Aopen+is%3Aissue">4) Atom Issues</a><br>
 <a name="ref5" href="https://github.com/jrfcabral/atom/blob/master/ESOF-docs/email1.md">5) Email de Kevin Sawicki</a>
+<a name="ref6" href="http://blog.atom.io/2014/04/25/ci-for-your-packages.html">6) Travis CI for packages</a>
