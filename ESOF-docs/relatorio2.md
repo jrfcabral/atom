@@ -245,7 +245,17 @@ A metodologia pode ser interpretada como uma alteração do método de brainstor
 para a sua expressão ao público. O processo de combinação e melhoramento de [ideias
 ocorre livremente](https://github.com/atom/tree-view/issues/55), possibilitando
 o aparecimento de novos requisitos de uma forma intuitiva e natural. Contudo o
-processo não ocorre num
+processo não ocorre num contexto limitado no tempo e a critica pode surgir em
+qualquer ponto do processo, já que de outra forma se correria o risco de perder
+tempo em discussões espúrias ou em sugestões manifestamente irrealistas ou que
+revelem desconhecimento sobre o projeto.
+
+#### Trabalho realizado por:
+
+* Ana Casimiro - anacasimiro1995@gmail.com
+* João Bernardino - joao.mnb@gmail.com
+* João Cabral - up201304395@fe.up.pt
+* João Mota - up201303462@fe.up.pt
 
 ## Referências
 <a name="ref1" href="http://blog.atom.io/2015/06/25/atom-1-0.html">1) Atom 1.0</a><br>
