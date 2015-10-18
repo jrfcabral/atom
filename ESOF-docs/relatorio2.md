@@ -99,6 +99,9 @@ a uma eventual anormal interrupção do programa.
 * Deve facilitar o *deployment* de atualizações, fruto do modelo de iteração
 utilizado para o desenvolvimento do programa.
 
+#### Diagrama de Casos de Uso
+<img src="https://raw.githubusercontent.com/jrfcabral/atom/master/ESOF-docs/Resources/UseCaseAtom.jpg">
+
 ### Contexto Atual
 Atualmente a situação do projeto é vastamente diferente das circunstâncias em
 que surgiu. O modelo open-source coloca diversos desafios no que à gestão
