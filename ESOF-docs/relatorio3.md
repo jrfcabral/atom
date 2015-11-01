@@ -6,18 +6,18 @@
 
 ### Logical View
 
-Esta vista apresenta as abstrações chave do sistema, tradicionalmente sob a forma de classes, objetos ou *packages*.
+  Esta vista apresenta as abstrações chave do sistema, tradicionalmente sob a forma de classes, objetos ou *packages*.
 
-Para melhor apresentar as abstrações chave do Atom, e visto que o mesmo não aparenta ter uma organização baseada em *packages*, é da opinião do grupo que um diagrama de classes é a melhor opção.
+  Para melhor apresentar as abstrações chave do Atom, e visto que o mesmo não aparenta ter uma organização baseada em *packages*, é da opinião do grupo que um diagrama de classes é a melhor opção.
 
-<Insert Class Diagram here>
+<img src="Resources/classesDiagram.jpg" alt="Atom classDiagram" />
 
 
 ### Implementation View
 
-  Esta vista permite observar a decomposição do sistema do ponto de vista programático, geralmente através de um diagrama de componentes.  
+  Esta vista permite observar a decomposição do sistema do ponto de vista programático. Ela permite perceber quais os principais componentes do sistema em estudo e como estes interagem entre eles, geralmente através de um diagrama de componentes. Torna-se pertinente, no contexto do Atom, mencionar o programa que o mesmo usa como base, o [Electron](http://electron.atom.io/). Este programa tem como funções a interação com o sistema operativo, maioritariamente para interação com o sistema de ficheiros do mesmo, bem como a gestão das janelas referentes ao *browser*.
 
-  <Insert Component Diagram here>
+  <img src="Resources/componentDiagram.jpg" alt="Atom componentDiagram"/>
 
 ### Process View
 
@@ -40,3 +40,13 @@ Para melhor apresentar as abstrações chave do Atom, e visto que o mesmo não a
   Esta vista pode ser interpretada como a chave para a compreensão de todo o modelo 4+1. É nesta vista que se  relacionam as restantes vistas, tornando claras as interações entre as várias componentes do sistema, bem como o comportamento do mesmo sob determinadas situações.
 
   Devido à inclusão do diagrama de casos de uso no último relatório elaborado, este não será incluído aqui.
+
+
+
+### Análise Crítica
+
+  Os diagramas apresentados no presente relatório são da autoria dos autores do mesmo, sendo baseados no estudo e interpretação dos ficheiros presentes no repositório do projeto.
+
+  Quanto à vista lógica do projeto, é da opinião do grupo que a organização efetuada pelos autores do mesmo podia ser melhorada através duma separação em pacotes. Isto facilitaria a compreensão do funcionamento do programa, algo que pode ser importante dada a natureza *open-source* do projeto em estudo.
+
+  Como é mencionado acima, a aparente falta de organização do projeto tende a dificultar a análise do mesmo. Assim, a sua compreensão por parte dos autores do presente relatório demorou algum tempo a atingir níveis aceitáveis e suficientes para a elaboração do mesmo. No entanto, é de realçar que o Atom tem uma [página de documentação](https://atom.io/docs/api/v1.1.0/Atom) das suas classes, onde estas estão bastante bem explicadas individualmente.
