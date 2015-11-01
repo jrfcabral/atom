@@ -21,9 +21,13 @@ Para melhor apresentar as abstrações chave do Atom, e visto que o mesmo não a
 
 ### Process View
 
-  Esta vista mostra os vários processos do sistema bem como as suas interações em *run-time*.
+  Esta vista mostra os vários processos do sistema bem como as suas interações em *run-time*. Um editor de texto permite a execução de um conjunto de actividades bastante diverso, sendo necessário implementar um conjunto muito diverso de funcionalidades que operam direta ou indiretamente sobre o buffer de texto a editar. Optou-se neste relatório por ilustrar apenas dois conjuntos de atividades essenciais: a manipulação básica de buffers de texto e de clipboards e as operações que permitem guardar e abrir ficheiros de texto de e para buffers.
 
-  <Insert Activity Diagram here>
+  Deve-se a seleção de atividades supramencionada ao facto de muitas das funcionalidades que complementam as a seguir ilustradas são implementadas em *packages* separados e portanto não se enquadrarem, num sentido estrito, no ambito do presente relatório.
+
+  <img src="Resources/activity-text-editing.png" width="600px" alt="Atom"/>
+  <img src="Resources/activity-file-system.png" width="600px" alt="Atom"/>
+
 
 ### Deployment View
 
