@@ -31,7 +31,7 @@
 
 ### Deployment View
 
-  Esta vista visa representar o sistema através da interação das componentes de *software* com o hardware do sistema. No caso do Atom, estamos a falar de uma aplicação desenvolvida para *desktop*. Como se trata de um editor de texto extremamente simples (uma vez que todas as funcionalidades mais avançadas do Atom são implementadas por packages externos, alojados nos seus próprios repositórios), o único *hardware* onde é feito o *deployment* é um computador, sem haver a necessidade de qualquer tipo de servidor. Assim, o diagrama de *deployment*, neste caso, torna-se então extremamente simples.
+  Esta vista visa representar o sistema através da interação das componentes de *software* com o hardware do sistema. No caso do Atom, estamos a falar de uma aplicação desenvolvida para *desktop*. Como se trata de um editor de texto extremamente simples (uma vez que todas as funcionalidades mais avançadas do Atom são implementadas por packages externos, alojados nos seus próprios repositórios), o único *hardware* onde é feito o *deployment* é um computador, sem haver a necessidade de qualquer tipo de servidor. O Atom tem a particularidade de ser uma aplicação multi-plataforma, podendo ser executado tanto em ambiente Windows como em Linux ou mesmo OS X. Assim, o diagrama de *deployment* torna-se extremamente simples.
 
   <img src="Resources/deploymentDiagram.jpg" width="350px" alt="Atom"/>
 
@@ -39,7 +39,7 @@
 
   Esta vista pode ser interpretada como a chave para a compreensão de todo o modelo 4+1. É nesta vista que se  relacionam as restantes vistas, tornando claras as interações entre as várias componentes do sistema, bem como o comportamento do mesmo sob determinadas situações.
 
-  Devido à inclusão do diagrama de casos de uso no último relatório elaborado, este não será incluído aqui.
+  Devido à inclusão do diagrama de casos de uso no [último relatório](https://github.com/jrfcabral/atom/blob/Relatorio/ESOF-docs/relatorio2.md#diagrama-de-casos-de-uso) elaborado, este não será incluído aqui.
 
 
 
@@ -50,3 +50,15 @@
   Quanto à vista lógica do projeto, é da opinião do grupo que a organização efetuada pelos autores do mesmo podia ser melhorada através duma separação em pacotes. Isto facilitaria a compreensão do funcionamento do programa, algo que pode ser importante dada a natureza *open-source* do projeto em estudo.
 
   Como é mencionado acima, a aparente falta de organização do projeto tende a dificultar a análise do mesmo. Assim, a sua compreensão por parte dos autores do presente relatório demorou algum tempo a atingir níveis aceitáveis e suficientes para a elaboração do mesmo. No entanto, é de realçar que o Atom tem uma [página de documentação](https://atom.io/docs/api/v1.1.0/Atom) das suas classes, onde estas estão bastante bem explicadas individualmente.
+  
+
+### Trabalho realizado por:
+
+* Ana Casimiro - anacasimiro1995@gmail.com
+	* Contribuição: 10 horas
+* João Bernardino - joao.mnb@gmail.com
+	* Contribuição: 10 horas 	
+* João Cabral - up201304395@fe.up.pt
+	* Contribuição: 10 horas
+* João Mota - up201303462@fe.up.pt
+	* Contribuição: 10 horas
