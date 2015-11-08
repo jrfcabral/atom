@@ -2,7 +2,7 @@
 
 ## O modelo 4+1
 
-  O modelo 4+1 de Arquitetura de Software permite agregar vários pontos de vista sobre o mesmo *software* para dar uma perspectiva o mais completa possível sobre o mesmo. Este modelo baseia-se então nos pontos de vista apresentados a seguir.
+  [O modelo de vistas 4+1](https://en.wikipedia.org/wiki/4%2B1_architectural_view_model) de Arquitetura de Software permite agregar vários pontos de vista sobre o mesmo *software* para dar uma perspectiva o mais completa possível sobre o mesmo. Este modelo baseia-se em quatro componentes, mais concretamente: [**vista lógica**](#logical-view), representada pelo diagrama de pacotes do projeto; [**vista de implementação**](#implementation-view), representada pelo diagrama de componentes, [**vista de processo**](#process-view), representada pelo diagrama de atividades, e  a [**vista de _deployment_**](#deployment-view), represenada pelo diagrama de *deployment*.
 
 ### Logical View
 
