@@ -8,7 +8,7 @@
 
   Esta vista apresenta as abstrações chave do sistema, tradicionalmente sob a forma de classes, objetos ou *packages*.
 
-  Para melhor apresentar as abstrações chave do Atom, e visto que o mesmo não aparenta ter uma organização baseada em *packages*, é da opinião do grupo que um diagrama de classes é a melhor opção.
+  Para melhor apresentar as abstrações chave do Atom, e visto que o mesmo não aparenta ter uma organização baseada em *packages*, é da opinião do grupo que um diagrama de classes é a melhor opção. Como mostra o diagrama, existe uma "classe principal", Atom, que relaciona e gere quase todos os componentes do programa. Importa também salientar que o que aqui está representado é apenas o Atom puro, sem todas as funcionalidades avançadas que estão disponíveis no produto final. Essas funcionalidades são implementadas através de *packages* externos, cada um alojado no seu próprio repositório, e por esse motivo não são contempladas neste relatório. Estamos, portanto, a estudar um editor de texto extremamente básico.
 
 <img src="Resources/classesDiagram.jpg" width="100%" alt="Atom classDiagram" />
 
@@ -45,7 +45,7 @@
 
 ### Análise Crítica
 
-  Os diagramas apresentados no presente relatório são da autoria dos autores do mesmo, sendo baseados no estudo e interpretação dos ficheiros presentes no repositório do projeto.
+  Os diagramas apresentados neste relatório foram realizados pelos autores do mesmo, sendo baseados no estudo e interpretação dos ficheiros presentes no repositório do projeto.
 
   Quanto à vista lógica do projeto, é da opinião do grupo que a organização efetuada pelos autores do mesmo podia ser melhorada através duma separação em pacotes. Isto facilitaria a compreensão do funcionamento do programa, algo que pode ser importante dada a natureza *open-source* do projeto em estudo.
 
