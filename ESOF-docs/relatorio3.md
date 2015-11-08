@@ -23,7 +23,7 @@
 
   Esta vista mostra os vários processos do sistema bem como as suas interações em *run-time*. Um editor de texto permite a execução de um conjunto de actividades bastante diverso, sendo necessário implementar um conjunto muito diverso de funcionalidades que operam direta ou indiretamente sobre o buffer de texto a editar. Optou-se neste relatório por ilustrar apenas dois conjuntos de atividades essenciais: a manipulação básica de buffers de texto e de clipboards e as operações que permitem guardar e abrir ficheiros de texto de e para buffers.
 
-  Deve-se a seleção de atividades supramencionada ao facto de muitas das funcionalidades que complementam as a seguir ilustradas são implementadas em *packages* separados e portanto não se enquadrarem, num sentido estrito, no ambito do presente relatório.
+  Deve-se a seleção de atividades supramencionada ao facto de muitas das funcionalidades que complementam as a seguir ilustradas serem implementadas em *packages* separados e portanto não se enquadrarem, num sentido estrito, no ambito do presente relatório.
 
   <img src="Resources/activity-text-editing.jpg" width="100%" alt="Atom"/>
   <img src="Resources/activity-file-system.jpg" width="100%" alt="Atom"/>
@@ -50,7 +50,7 @@
   Quanto à vista lógica do projeto, é da opinião do grupo que a organização efetuada pelos autores do mesmo podia ser melhorada através duma separação em pacotes. Isto facilitaria a compreensão do funcionamento do programa, algo que pode ser importante dada a natureza *open-source* do projeto em estudo.
 
   Como é mencionado acima, a aparente falta de organização do projeto tende a dificultar a análise do mesmo. Assim, a sua compreensão por parte dos autores do presente relatório demorou algum tempo a atingir níveis aceitáveis e suficientes para a elaboração do mesmo. No entanto, é de realçar que o Atom tem uma [página de documentação](https://atom.io/docs/api/v1.1.0/Atom) das suas classes, onde estas estão bastante bem explicadas individualmente.
-  
+
 
 ### Trabalho realizado por:
 
