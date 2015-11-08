@@ -10,14 +10,14 @@
 
   Para melhor apresentar as abstrações chave do Atom, e visto que o mesmo não aparenta ter uma organização baseada em *packages*, é da opinião do grupo que um diagrama de classes é a melhor opção.
 
-<img src="Resources/classesDiagram.jpg" alt="Atom classDiagram" />
+<img src="Resources/classesDiagram.jpg" width="100%" alt="Atom classDiagram" />
 
 
 ### Implementation View
 
   Esta vista permite observar a decomposição do sistema do ponto de vista programático. Ela permite perceber quais os principais componentes do sistema em estudo e como estes interagem entre eles, geralmente através de um diagrama de componentes. Torna-se pertinente, no contexto do Atom, mencionar o programa que o mesmo usa como base, o [Electron](http://electron.atom.io/). Este programa tem como funções a interação com o sistema operativo, maioritariamente para interação com o sistema de ficheiros do mesmo, bem como a gestão das janelas referentes ao *browser*.
 
-  <img src="Resources/componentDiagram.jpg" alt="Atom componentDiagram"/>
+  <img src="Resources/componentDiagram.jpg" width="100%" alt="Atom componentDiagram"/>
 
 ### Process View
 
@@ -25,15 +25,15 @@
 
   Deve-se a seleção de atividades supramencionada ao facto de muitas das funcionalidades que complementam as a seguir ilustradas são implementadas em *packages* separados e portanto não se enquadrarem, num sentido estrito, no ambito do presente relatório.
 
-  <img src="Resources/activity-text-editing.png" width="600px" alt="Atom"/>
-  <img src="Resources/activity-file-system.png" width="600px" alt="Atom"/>
+  <img src="Resources/activity-text-editing.jpg" width="100%" alt="Atom"/>
+  <img src="Resources/activity-file-system.jpg" width="100%" alt="Atom"/>
 
 
 ### Deployment View
 
-  Esta vista visa representar o sistema através da interação das componentes de *software* com o hardware do sistema. (Alguém que reveja isto sff.)
+  Esta vista visa representar o sistema através da interação das componentes de *software* com o hardware do sistema. No caso do Atom, estamos a falar de uma aplicação desenvolvida para *desktop*. Como se trata de um editor de texto extremamente simples (uma vez que todas as funcionalidades mais avançadas do Atom são implementadas por packages externos, alojados nos seus próprios repositórios), o único *hardware* onde é feito o *deployment* é um computador, sem haver a necessidade de qualquer tipo de servidor. Assim, o diagrama de *deployment*, neste caso, torna-se então extremamente simples.
 
-  <Insert Deployment Diagram here>
+  <img src="Resources/deploymentDiagram.jpg" width="350px" alt="Atom"/>
 
 ### Use Case View
 
