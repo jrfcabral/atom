@@ -54,10 +54,7 @@ GutterContainer = require './gutter-container'
 # soft wraps and folds to ensure your code interacts with them correctly.
 module.exports =
 class TextEditor extends Model
-  atom.deserializers.add(this)
-
   callDisplayBufferCreatedHook: false
-  registerEditor: false
   buffer: null
   languageMode: null
   cursors: null
@@ -67,9 +64,9 @@ class TextEditor extends Model
   selectionFlashDuration: 500
   gutterContainer: null
 
-  @deserialize: (state) ->
+  @deserialize: (state, atomEnvironment) ->
     try
-      displayBuffer = DisplayBuffer.deserialize(state.displayBuffer)
+      displayBuffer = DisplayBuffer.deserialize(state.displayBuffer, atomEnvironment)
     catch error
       if error.syscall is 'read'
         return # Error reading the file, don't deserialize an editor for it
@@ -77,11 +74,35 @@ class TextEditor extends Model
         throw error
 
     state.displayBuffer = displayBuffer
-    state.registerEditor = true
+    state.config = atomEnvironment.config
+    state.notificationManager = atomEnvironment.notifications
+    state.packageManager = atomEnvironment.packages
+    state.clipboard = atomEnvironment.clipboard
+    state.viewRegistry = atomEnvironment.views
+    state.grammarRegistry = atomEnvironment.grammars
+    state.project = atomEnvironment.project
+    state.assert = atomEnvironment.assert.bind(atomEnvironment)
+    state.applicationDelegate = atomEnvironment.applicationDelegate
     new this(state)
 
-  constructor: ({@softTabs, @scrollRow, @scrollColumn, initialLine, initialColumn, tabLength, softWrapped, @displayBuffer, buffer, registerEditor, suppressCursorCreation, @mini, @placeholderText, lineNumberGutterVisible, largeFileMode}={}) ->
+  constructor: (params={}) ->
     super
+
+    {
+      @softTabs, @scrollRow, @scrollColumn, initialLine, initialColumn, tabLength,
+      softWrapped, @displayBuffer, buffer, suppressCursorCreation, @mini, @placeholderText,
+      lineNumberGutterVisible, largeFileMode, @config, @notificationManager, @packageManager,
+      @clipboard, @viewRegistry, @grammarRegistry, @project, @assert, @applicationDelegate
+    } = params
+
+    throw new Error("Must pass a config parameter when constructing TextEditors") unless @config?
+    throw new Error("Must pass a notificationManager parameter when constructing TextEditors") unless @notificationManager?
+    throw new Error("Must pass a packageManager parameter when constructing TextEditors") unless @packageManager?
+    throw new Error("Must pass a clipboard parameter when constructing TextEditors") unless @clipboard?
+    throw new Error("Must pass a viewRegistry parameter when constructing TextEditors") unless @viewRegistry?
+    throw new Error("Must pass a grammarRegistry parameter when constructing TextEditors") unless @grammarRegistry?
+    throw new Error("Must pass a project parameter when constructing TextEditors") unless @project?
+    throw new Error("Must pass an assert parameter when constructing TextEditors") unless @assert?
 
     @emitter = new Emitter
     @disposables = new CompositeDisposable
@@ -89,7 +110,10 @@ class TextEditor extends Model
     @selections = []
 
     buffer ?= new TextBuffer
-    @displayBuffer ?= new DisplayBuffer({buffer, tabLength, softWrapped, ignoreInvisibles: @mini, largeFileMode})
+    @displayBuffer ?= new DisplayBuffer({
+      buffer, tabLength, softWrapped, ignoreInvisibles: @mini, largeFileMode,
+      @config, @assert, @grammarRegistry, @packageManager
+    })
     @buffer = @displayBuffer.buffer
 
     for marker in @findMarkers(@getSelectionMarkerAttributes())
@@ -105,17 +129,15 @@ class TextEditor extends Model
       initialColumn = Math.max(parseInt(initialColumn) or 0, 0)
       @addCursorAtBufferPosition([initialLine, initialColumn])
 
-    @languageMode = new LanguageMode(this)
+    @languageMode = new LanguageMode(this, @config)
 
-    @setEncoding(atom.config.get('core.fileEncoding', scope: @getRootScopeDescriptor()))
+    @setEncoding(@config.get('core.fileEncoding', scope: @getRootScopeDescriptor()))
 
     @gutterContainer = new GutterContainer(this)
     @lineNumberGutter = @gutterContainer.addGutter
       name: 'line-number'
       priority: 0
       visible: lineNumberGutterVisible
-
-    atom.workspace?.editorAdded(this) if registerEditor
 
   serialize: ->
     deserializer: 'TextEditor'
@@ -128,8 +150,8 @@ class TextEditor extends Model
   subscribeToBuffer: ->
     @buffer.retain()
     @disposables.add @buffer.onDidChangePath =>
-      unless atom.project.getPaths().length > 0
-        atom.project.setPaths([path.dirname(@getPath())])
+      unless @project.getPaths().length > 0
+        @project.setPaths([path.dirname(@getPath())])
       @emitter.emit 'did-change-title', @getTitle()
       @emitter.emit 'did-change-path', @getPath()
     @disposables.add @buffer.onDidChangeEncoding =>
@@ -148,7 +170,7 @@ class TextEditor extends Model
 
   subscribeToTabTypeConfig: ->
     @tabTypeSubscription?.dispose()
-    @tabTypeSubscription = atom.config.observe 'editor.tabType', scope: @getRootScopeDescriptor(), =>
+    @tabTypeSubscription = @config.observe 'editor.tabType', scope: @getRootScopeDescriptor(), =>
       @softTabs = @shouldUseSoftTabs(defaultValue: @softTabs)
 
   destroyed: ->
@@ -429,12 +451,12 @@ class TextEditor extends Model
   onDidChangeScrollTop: (callback) ->
     Grim.deprecate("This is now a view method. Call TextEditorElement::onDidChangeScrollTop instead.")
 
-    atom.views.getView(this).onDidChangeScrollTop(callback)
+    @viewRegistry.getView(this).onDidChangeScrollTop(callback)
 
   onDidChangeScrollLeft: (callback) ->
     Grim.deprecate("This is now a view method. Call TextEditorElement::onDidChangeScrollLeft instead.")
 
-    atom.views.getView(this).onDidChangeScrollLeft(callback)
+    @viewRegistry.getView(this).onDidChangeScrollLeft(callback)
 
   onDidRequestAutoscroll: (callback) ->
     @displayBuffer.onDidRequestAutoscroll(callback)
@@ -456,7 +478,11 @@ class TextEditor extends Model
   copy: ->
     displayBuffer = @displayBuffer.copy()
     softTabs = @getSoftTabs()
-    newEditor = new TextEditor({@buffer, displayBuffer, @tabLength, softTabs, suppressCursorCreation: true, registerEditor: true})
+    newEditor = new TextEditor({
+      @buffer, displayBuffer, @tabLength, softTabs, suppressCursorCreation: true,
+      @config, @notificationManager, @packageManager, @clipboard, @viewRegistry,
+      @grammarRegistry, @project, @assert, @applicationDelegate
+    })
     for marker in @findMarkers(editorId: @id)
       marker.copy(editorId: newEditor.id, preserveFolds: true)
     newEditor
@@ -547,6 +573,45 @@ class TextEditor extends Model
     else
       'untitled'
 
+  # Essential: Get unique title for display in other parts of the UI
+  # such as the window title.
+  #
+  # If the editor's buffer is unsaved, its title is "untitled"
+  # If the editor's buffer is saved, its unique title is formatted as one
+  # of the following,
+  # * "<filename>" when it is the only editing buffer with this file name.
+  # * "<unique-dir-prefix>/.../<filename>", where the "..." may be omitted
+  # if the the direct parent directory is already different.
+  #
+  # Returns a {String}
+  getUniqueTitle: ->
+    if sessionPath = @getPath()
+      title = @getTitle()
+
+      # find text editors with identical file name.
+      paths = []
+      for textEditor in atom.workspace.getTextEditors() when textEditor isnt this
+        if textEditor.getTitle() is title
+          paths.push(textEditor.getPath())
+      if paths.length is 0
+        return title
+      fileName = path.basename(sessionPath)
+
+      # find the first directory in all these paths that is unique
+      nLevel = 0
+      while (_.some(paths, (apath) -> path.basename(apath) is path.basename(sessionPath)))
+        sessionPath = path.dirname(sessionPath)
+        paths = _.map(paths, (apath) -> path.dirname(apath))
+        nLevel += 1
+
+      directory = path.basename sessionPath
+      if nLevel > 1
+        path.join(directory, "...", fileName)
+      else
+        path.join(directory, fileName)
+    else
+      'untitled'
+
   # Essential: Get the editor's long title for display in other parts of the UI
   # such as the window title.
   #
@@ -557,7 +622,7 @@ class TextEditor extends Model
   getLongTitle: ->
     if sessionPath = @getPath()
       fileName = path.basename(sessionPath)
-      directory = atom.project.relativize(path.dirname(sessionPath))
+      directory = @project.relativize(path.dirname(sessionPath))
       directory = if directory.length > 0 then directory else path.basename(path.dirname(sessionPath))
       "#{fileName} - #{directory}"
     else
@@ -585,7 +650,7 @@ class TextEditor extends Model
   # Copies the current file path to the native clipboard.
   copyPathToClipboard: ->
     if filePath = @getPath()
-      atom.clipboard.write(filePath)
+      @clipboard.write(filePath)
 
   ###
   Section: File Operations
@@ -594,14 +659,14 @@ class TextEditor extends Model
   # Essential: Saves the editor's text buffer.
   #
   # See {TextBuffer::save} for more details.
-  save: -> @buffer.save(backup: atom.config.get('editor.backUpBeforeSaving'))
+  save: -> @buffer.save(backup: @config.get('editor.backUpBeforeSaving'))
 
   # Essential: Saves the editor's text buffer as the given path.
   #
   # See {TextBuffer::saveAs} for more details.
   #
   # * `filePath` A {String} path.
-  saveAs: (filePath) -> @buffer.saveAs(filePath, backup: atom.config.get('editor.backUpBeforeSaving'))
+  saveAs: (filePath) -> @buffer.saveAs(filePath, backup: @config.get('editor.backUpBeforeSaving'))
 
   # Determine whether the user should be prompted to save before closing
   # this editor.
@@ -617,9 +682,20 @@ class TextEditor extends Model
 
   checkoutHeadRevision: ->
     if filePath = this.getPath()
-      atom.project.repositoryForDirectory(new Directory(path.dirname(filePath)))
-        .then (repository) =>
-          repository?.checkoutHeadForEditor(this)
+      checkoutHead = =>
+        @project.repositoryForDirectory(new Directory(path.dirname(filePath)))
+          .then (repository) =>
+            repository?.checkoutHeadForEditor(this)
+
+      if @config.get('editor.confirmCheckoutHeadRevision')
+        @applicationDelegate.confirm
+          message: 'Confirm Checkout HEAD Revision'
+          detailedMessage: "Are you sure you want to discard all changes to \"#{path.basename(filePath)}\" since the last Git commit?"
+          buttons:
+            OK: checkoutHead
+            Cancel: null
+      else
+        checkoutHead()
     else
       Promise.resolve(false)
 
@@ -748,7 +824,7 @@ class TextEditor extends Model
     return false unless @emitWillInsertTextEvent(text)
 
     groupingInterval = if options.groupUndo
-      atom.config.get('editor.undoGroupingInterval')
+      @config.get('editor.undoGroupingInterval')
     else
       0
 
@@ -790,114 +866,177 @@ class TextEditor extends Model
       @transact groupingInterval, =>
         fn(selection, index) for selection, index in @getSelectionsOrderedByBufferPosition()
 
-  # Move lines intersection the most recent selection up by one row in screen
-  # coordinates.
+  # Move lines intersecting the most recent selection or multiple selections
+  # up by one row in screen coordinates.
   moveLineUp: ->
-    selection = @getSelectedBufferRange()
-    return if selection.start.row is 0
-    lastRow = @buffer.getLastRow()
-    return if selection.isEmpty() and selection.start.row is lastRow and @buffer.getLastLine() is ''
+    selections = @getSelectedBufferRanges()
+    selections.sort (a, b) -> a.compare(b)
+
+    if selections[0].start.row is 0
+      return
+
+    if selections[selections.length - 1].start.row is @getLastBufferRow() and @buffer.getLastLine() is ''
+      return
 
     @transact =>
-      foldedRows = []
-      rows = [selection.start.row..selection.end.row]
-      if selection.start.row isnt selection.end.row and selection.end.column is 0
-        rows.pop() unless @isFoldedAtBufferRow(selection.end.row)
+      newSelectionRanges = []
 
-      # Move line around the fold that is directly above the selection
-      precedingScreenRow = @screenPositionForBufferPosition([selection.start.row]).translate([-1])
-      precedingBufferRow = @bufferPositionForScreenPosition(precedingScreenRow).row
-      if fold = @largestFoldContainingBufferRow(precedingBufferRow)
-        insertDelta = fold.getBufferRange().getRowCount()
-      else
-        insertDelta = 1
+      while selections.length > 0
+        # Find selections spanning a contiguous set of lines
+        selection = selections.shift()
+        selectionsToMove = [selection]
 
-      for row in rows
-        if fold = @displayBuffer.largestFoldStartingAtBufferRow(row)
-          bufferRange = fold.getBufferRange()
-          startRow = bufferRange.start.row
-          endRow = bufferRange.end.row
-          foldedRows.push(startRow - insertDelta)
+        while selection.end.row is selections[0]?.start.row
+          selectionsToMove.push(selections[0])
+          selection.end.row = selections[0].end.row
+          selections.shift()
+
+        # Compute the range spanned by all these selections...
+        linesRangeStart = [selection.start.row, 0]
+        if selection.end.row > selection.start.row and selection.end.column is 0
+          # Don't move the last line of a multi-line selection if the selection ends at column 0
+          linesRange = new Range(linesRangeStart, selection.end)
         else
-          startRow = row
-          endRow = row
+          linesRange = new Range(linesRangeStart, [selection.end.row + 1, 0])
 
-        insertPosition = Point.fromObject([startRow - insertDelta])
-        endPosition = Point.min([endRow + 1], @buffer.getEndPosition())
-        lines = @buffer.getTextInRange([[startRow], endPosition])
-        if endPosition.row is lastRow and endPosition.column > 0 and not @buffer.lineEndingForRow(endPosition.row)
-          lines = "#{lines}\n"
+        # If there's a fold containing either the starting row or the end row
+        # of the selection then the whole fold needs to be moved and restored.
+        # The initial fold range is stored and will be translated once the
+        # insert delta is know.
+        selectionFoldRanges = []
+        foldAtSelectionStart =
+          @displayBuffer.largestFoldContainingBufferRow(selection.start.row)
+        foldAtSelectionEnd =
+          @displayBuffer.largestFoldContainingBufferRow(selection.end.row)
+        if fold = foldAtSelectionStart ? foldAtSelectionEnd
+          selectionFoldRanges.push range = fold.getBufferRange()
+          newEndRow = range.end.row + 1
+          linesRange.end.row = newEndRow if newEndRow > linesRange.end.row
+          fold.destroy()
 
-        @buffer.deleteRows(startRow, endRow)
+        # If selected line range is preceded by a fold, one line above on screen
+        # could be multiple lines in the buffer.
+        precedingScreenRow = @screenRowForBufferRow(linesRange.start.row) - 1
+        precedingBufferRow = @bufferRowForScreenRow(precedingScreenRow)
+        insertDelta = linesRange.start.row - precedingBufferRow
+
+        # Any folds in the text that is moved will need to be re-created.
+        # It includes the folds that were intersecting with the selection.
+        rangesToRefold = selectionFoldRanges.concat(
+          @outermostFoldsInBufferRowRange(linesRange.start.row, linesRange.end.row).map (fold) ->
+            range = fold.getBufferRange()
+            fold.destroy()
+            range
+        ).map (range) -> range.translate([-insertDelta, 0])
 
         # Make sure the inserted text doesn't go into an existing fold
-        if fold = @displayBuffer.largestFoldStartingAtBufferRow(insertPosition.row)
-          @unfoldBufferRow(insertPosition.row)
-          foldedRows.push(insertPosition.row + endRow - startRow + fold.getBufferRange().getRowCount())
+        if fold = @displayBuffer.largestFoldStartingAtBufferRow(precedingBufferRow)
+          rangesToRefold.push(fold.getBufferRange().translate([linesRange.getRowCount() - 1, 0]))
+          fold.destroy()
 
-        @buffer.insert(insertPosition, lines)
+        # Delete lines spanned by selection and insert them on the preceding buffer row
+        lines = @buffer.getTextInRange(linesRange)
+        lines += @buffer.lineEndingForRow(linesRange.end.row - 1) unless lines[lines.length - 1] is '\n'
+        @buffer.delete(linesRange)
+        @buffer.insert([precedingBufferRow, 0], lines)
 
-      # Restore folds that existed before the lines were moved
-      for foldedRow in foldedRows when 0 <= foldedRow <= @getLastBufferRow()
-        @foldBufferRow(foldedRow)
+        # Restore folds that existed before the lines were moved
+        for rangeToRefold in rangesToRefold
+          @displayBuffer.createFold(rangeToRefold.start.row, rangeToRefold.end.row)
 
-      @setSelectedBufferRange(selection.translate([-insertDelta]), preserveFolds: true, autoscroll: true)
+        for selection in selectionsToMove
+          newSelectionRanges.push(selection.translate([-insertDelta, 0]))
 
-  # Move lines intersecting the most recent selection down by one row in screen
-  # coordinates.
+      @setSelectedBufferRanges(newSelectionRanges, {autoscroll: false, preserveFolds: true})
+      @autoIndentSelectedRows() if @shouldAutoIndent()
+      @scrollToBufferPosition([newSelectionRanges[0].start.row, 0])
+
+  # Move lines intersecting the most recent selection or muiltiple selections
+  # down by one row in screen coordinates.
   moveLineDown: ->
-    selection = @getSelectedBufferRange()
-    lastRow = @buffer.getLastRow()
-    return if selection.end.row is lastRow
-    return if selection.end.row is lastRow - 1 and @buffer.getLastLine() is ''
+    selections = @getSelectedBufferRanges()
+    selections.sort (a, b) -> a.compare(b)
+    selections = selections.reverse()
 
     @transact =>
-      foldedRows = []
-      rows = [selection.end.row..selection.start.row]
-      if selection.start.row isnt selection.end.row and selection.end.column is 0
-        rows.shift() unless @isFoldedAtBufferRow(selection.end.row)
+      @consolidateSelections()
+      newSelectionRanges = []
 
-      # Move line around the fold that is directly below the selection
-      followingScreenRow = @screenPositionForBufferPosition([selection.end.row]).translate([1])
-      followingBufferRow = @bufferPositionForScreenPosition(followingScreenRow).row
-      if fold = @largestFoldContainingBufferRow(followingBufferRow)
-        insertDelta = fold.getBufferRange().getRowCount()
-      else
-        insertDelta = 1
+      while selections.length > 0
+        # Find selections spanning a contiguous set of lines
+        selection = selections.shift()
+        selectionsToMove = [selection]
 
-      for row in rows
-        if fold = @displayBuffer.largestFoldStartingAtBufferRow(row)
-          bufferRange = fold.getBufferRange()
-          startRow = bufferRange.start.row
-          endRow = bufferRange.end.row
-          foldedRows.push(endRow + insertDelta)
+        # if the current selection start row matches the next selections' end row - make them one selection
+        while selection.start.row is selections[0]?.end.row
+          selectionsToMove.push(selections[0])
+          selection.start.row = selections[0].start.row
+          selections.shift()
+
+        # Compute the range spanned by all these selections...
+        linesRangeStart = [selection.start.row, 0]
+        if selection.end.row > selection.start.row and selection.end.column is 0
+          # Don't move the last line of a multi-line selection if the selection ends at column 0
+          linesRange = new Range(linesRangeStart, selection.end)
         else
-          startRow = row
-          endRow = row
+          linesRange = new Range(linesRangeStart, [selection.end.row + 1, 0])
 
-        if endRow + 1 is lastRow
-          endPosition = [endRow, @buffer.lineLengthForRow(endRow)]
-        else
-          endPosition = [endRow + 1]
-        lines = @buffer.getTextInRange([[startRow], endPosition])
-        @buffer.deleteRows(startRow, endRow)
+        # If there's a fold containing either the starting row or the end row
+        # of the selection then the whole fold needs to be moved and restored.
+        # The initial fold range is stored and will be translated once the
+        # insert delta is know.
+        selectionFoldRanges = []
+        foldAtSelectionStart =
+          @displayBuffer.largestFoldContainingBufferRow(selection.start.row)
+        foldAtSelectionEnd =
+          @displayBuffer.largestFoldContainingBufferRow(selection.end.row)
+        if fold = foldAtSelectionStart ? foldAtSelectionEnd
+          selectionFoldRanges.push range = fold.getBufferRange()
+          newEndRow = range.end.row + 1
+          linesRange.end.row = newEndRow if newEndRow > linesRange.end.row
+          fold.destroy()
 
-        insertPosition = Point.min([startRow + insertDelta], @buffer.getEndPosition())
-        if insertPosition.row is @buffer.getLastRow() and insertPosition.column > 0
+        # If selected line range is followed by a fold, one line below on screen
+        # could be multiple lines in the buffer. But at the same time, if the
+        # next buffer row is wrapped, one line in the buffer can represent many
+        # screen rows.
+        followingScreenRow = @displayBuffer.lastScreenRowForBufferRow(linesRange.end.row) + 1
+        followingBufferRow = @bufferRowForScreenRow(followingScreenRow)
+        insertDelta = followingBufferRow - linesRange.end.row
+
+        # Any folds in the text that is moved will need to be re-created.
+        # It includes the folds that were intersecting with the selection.
+        rangesToRefold = selectionFoldRanges.concat(
+          @outermostFoldsInBufferRowRange(linesRange.start.row, linesRange.end.row).map (fold) ->
+            range = fold.getBufferRange()
+            fold.destroy()
+            range
+        ).map (range) -> range.translate([insertDelta, 0])
+
+        # Make sure the inserted text doesn't go into an existing fold
+        if fold = @displayBuffer.largestFoldStartingAtBufferRow(followingBufferRow)
+          rangesToRefold.push(fold.getBufferRange().translate([insertDelta - 1, 0]))
+          fold.destroy()
+
+        # Delete lines spanned by selection and insert them on the following correct buffer row
+        insertPosition = new Point(selection.translate([insertDelta, 0]).start.row, 0)
+        lines = @buffer.getTextInRange(linesRange)
+        if linesRange.end.row is @buffer.getLastRow()
           lines = "\n#{lines}"
 
-        # Make sure the inserted text doesn't go into an existing fold
-        if fold = @displayBuffer.largestFoldStartingAtBufferRow(insertPosition.row)
-          @unfoldBufferRow(insertPosition.row)
-          foldedRows.push(insertPosition.row + fold.getBufferRange().getRowCount())
-
+        @buffer.delete(linesRange)
         @buffer.insert(insertPosition, lines)
 
-      # Restore folds that existed before the lines were moved
-      for foldedRow in foldedRows when 0 <= foldedRow <= @getLastBufferRow()
-        @foldBufferRow(foldedRow)
+        # Restore folds that existed before the lines were moved
+        for rangeToRefold in rangesToRefold
+          @displayBuffer.createFold(rangeToRefold.start.row, rangeToRefold.end.row)
 
-      @setSelectedBufferRange(selection.translate([insertDelta]), preserveFolds: true, autoscroll: true)
+        for selection in selectionsToMove
+          newSelectionRanges.push(selection.translate([insertDelta, 0]))
+
+      @setSelectedBufferRanges(newSelectionRanges, {autoscroll: false, preserveFolds: true})
+      @autoIndentSelectedRows() if @shouldAutoIndent()
+      @scrollToBufferPosition([newSelectionRanges[0].start.row - 1, 0])
 
   # Duplicate the most recent cursor's current line.
   duplicateLines: ->
@@ -1742,7 +1881,7 @@ class TextEditor extends Model
 
   # Add a cursor based on the given {Marker}.
   addCursor: (marker) ->
-    cursor = new Cursor(editor: this, marker: marker)
+    cursor = new Cursor(editor: this, marker: marker, config: @config)
     @cursors.push(cursor)
     @decorateMarker(marker, type: 'line-number', class: 'cursor-line')
     @decorateMarker(marker, type: 'line-number', class: 'cursor-line-no-selection', onlyHead: true, onlyEmpty: true)
@@ -2225,7 +2364,7 @@ class TextEditor extends Model
     unless marker.getProperties().preserveFolds
       @destroyFoldsContainingBufferRange(marker.getBufferRange())
     cursor = @addCursor(marker)
-    selection = new Selection(_.extend({editor: this, marker, cursor}, options))
+    selection = new Selection(_.extend({editor: this, marker, cursor, @clipboard}, options))
     @selections.push(selection)
     selectionBufferRange = selection.getBufferRange()
     @mergeIntersectingSelections(preserveFolds: marker.getProperties().preserveFolds)
@@ -2382,10 +2521,10 @@ class TextEditor extends Model
   #
   # Returns a {Boolean}
   shouldUseSoftTabs: ({defaultValue}) ->
-    tabType = atom.config.get('editor.tabType', scope: @getRootScopeDescriptor())
+    tabType = @config.get('editor.tabType', scope: @getRootScopeDescriptor())
     switch tabType
       when 'auto'
-        @usesSoftTabs() ? defaultValue ? atom.config.get('editor.softTabs') ? true
+        @usesSoftTabs() ? defaultValue ? @config.get('editor.softTabs') ? true
       when 'hard'
         false
       when 'soft'
@@ -2561,7 +2700,7 @@ class TextEditor extends Model
     list = list.map (item) -> "* #{item}"
     content = "Scopes at Cursor\n#{list.join('\n')}"
 
-    atom.notifications.addInfo(content, dismissable: true)
+    @notificationManager.addInfo(content, dismissable: true)
 
   # {Delegates to: DisplayBuffer.tokenForBufferPosition}
   tokenForBufferPosition: (bufferPosition) -> @displayBuffer.tokenForBufferPosition(bufferPosition)
@@ -2613,7 +2752,7 @@ class TextEditor extends Model
   #
   # * `options` (optional) See {Selection::insertText}.
   pasteText: (options={}) ->
-    {text: clipboardText, metadata} = atom.clipboard.readWithMetadata()
+    {text: clipboardText, metadata} = @clipboard.readWithMetadata()
     return false unless @emitWillInsertTextEvent(clipboardText)
 
     metadata ?= {}
@@ -2866,24 +3005,24 @@ class TextEditor extends Model
   scrollToTop: ->
     Grim.deprecate("This is now a view method. Call TextEditorElement::scrollToTop instead.")
 
-    atom.views.getView(this).scrollToTop()
+    @viewRegistry.getView(this).scrollToTop()
 
   scrollToBottom: ->
     Grim.deprecate("This is now a view method. Call TextEditorElement::scrollToTop instead.")
 
-    atom.views.getView(this).scrollToBottom()
+    @viewRegistry.getView(this).scrollToBottom()
 
   scrollToScreenRange: (screenRange, options) -> @displayBuffer.scrollToScreenRange(screenRange, options)
 
   getHorizontalScrollbarHeight: ->
     Grim.deprecate("This is now a view method. Call TextEditorElement::getHorizontalScrollbarHeight instead.")
 
-    atom.views.getView(this).getHorizontalScrollbarHeight()
+    @viewRegistry.getView(this).getHorizontalScrollbarHeight()
 
   getVerticalScrollbarWidth: ->
     Grim.deprecate("This is now a view method. Call TextEditorElement::getVerticalScrollbarWidth instead.")
 
-    atom.views.getView(this).getVerticalScrollbarWidth()
+    @viewRegistry.getView(this).getVerticalScrollbarWidth()
 
   pageUp: ->
     @moveUp(@getRowsPerPage())
@@ -2908,10 +3047,10 @@ class TextEditor extends Model
   ###
 
   shouldAutoIndent: ->
-    atom.config.get("editor.autoIndent", scope: @getRootScopeDescriptor())
+    @config.get("editor.autoIndent", scope: @getRootScopeDescriptor())
 
   shouldAutoIndentOnPaste: ->
-    atom.config.get("editor.autoIndentOnPaste", scope: @getRootScopeDescriptor())
+    @config.get("editor.autoIndentOnPaste", scope: @getRootScopeDescriptor())
 
   ###
   Section: Event Handlers
@@ -2950,19 +3089,19 @@ class TextEditor extends Model
 
   getFirstVisibleScreenRow: ->
     deprecate("This is now a view method. Call TextEditorElement::getFirstVisibleScreenRow instead.")
-    atom.views.getView(this).getVisibleRowRange()[0]
+    @viewRegistry.getView(this).getVisibleRowRange()[0]
 
   getLastVisibleScreenRow: ->
     Grim.deprecate("This is now a view method. Call TextEditorElement::getLastVisibleScreenRow instead.")
-    atom.views.getView(this).getVisibleRowRange()[1]
+    @viewRegistry.getView(this).getVisibleRowRange()[1]
 
   pixelPositionForBufferPosition: (bufferPosition) ->
     Grim.deprecate("This method is deprecated on the model layer. Use `TextEditorElement::pixelPositionForBufferPosition` instead")
-    atom.views.getView(this).pixelPositionForBufferPosition(bufferPosition)
+    @viewRegistry.getView(this).pixelPositionForBufferPosition(bufferPosition)
 
   pixelPositionForScreenPosition: (screenPosition) ->
     Grim.deprecate("This method is deprecated on the model layer. Use `TextEditorElement::pixelPositionForScreenPosition` instead")
-    atom.views.getView(this).pixelPositionForScreenPosition(screenPosition)
+    @viewRegistry.getView(this).pixelPositionForScreenPosition(screenPosition)
 
   getSelectionMarkerAttributes: ->
     {type: 'selection', editorId: @id, invalidate: 'never', maintainHistory: true}
@@ -2976,15 +3115,22 @@ class TextEditor extends Model
   getLineHeightInPixels: -> @displayBuffer.getLineHeightInPixels()
   setLineHeightInPixels: (lineHeightInPixels) -> @displayBuffer.setLineHeightInPixels(lineHeightInPixels)
 
+  getKoreanCharWidth: -> @displayBuffer.getKoreanCharWidth()
+
+  getHalfWidthCharWidth: -> @displayBuffer.getHalfWidthCharWidth()
+
+  getDoubleWidthCharWidth: -> @displayBuffer.getDoubleWidthCharWidth()
+
   getDefaultCharWidth: -> @displayBuffer.getDefaultCharWidth()
-  setDefaultCharWidth: (defaultCharWidth) -> @displayBuffer.setDefaultCharWidth(defaultCharWidth)
+  setDefaultCharWidth: (defaultCharWidth, doubleWidthCharWidth, halfWidthCharWidth, koreanCharWidth) ->
+    @displayBuffer.setDefaultCharWidth(defaultCharWidth, doubleWidthCharWidth, halfWidthCharWidth, koreanCharWidth)
 
   setHeight: (height, reentrant=false) ->
     if reentrant
       @displayBuffer.setHeight(height)
     else
       Grim.deprecate("This is now a view method. Call TextEditorElement::setHeight instead.")
-      atom.views.getView(this).setHeight(height)
+      @viewRegistry.getView(this).setHeight(height)
 
   getHeight: ->
     Grim.deprecate("This is now a view method. Call TextEditorElement::getHeight instead.")
@@ -2997,7 +3143,7 @@ class TextEditor extends Model
       @displayBuffer.setWidth(width)
     else
       Grim.deprecate("This is now a view method. Call TextEditorElement::setWidth instead.")
-      atom.views.getView(this).setWidth(width)
+      @viewRegistry.getView(this).setWidth(width)
 
   getWidth: ->
     Grim.deprecate("This is now a view method. Call TextEditorElement::getWidth instead.")
@@ -3012,77 +3158,82 @@ class TextEditor extends Model
   getScrollTop: ->
     Grim.deprecate("This is now a view method. Call TextEditorElement::getScrollTop instead.")
 
-    atom.views.getView(this).getScrollTop()
+    @viewRegistry.getView(this).getScrollTop()
 
   setScrollTop: (scrollTop) ->
     Grim.deprecate("This is now a view method. Call TextEditorElement::setScrollTop instead.")
 
-    atom.views.getView(this).setScrollTop(scrollTop)
+    @viewRegistry.getView(this).setScrollTop(scrollTop)
 
   getScrollBottom: ->
     Grim.deprecate("This is now a view method. Call TextEditorElement::getScrollBottom instead.")
 
-    atom.views.getView(this).getScrollBottom()
+    @viewRegistry.getView(this).getScrollBottom()
 
   setScrollBottom: (scrollBottom) ->
     Grim.deprecate("This is now a view method. Call TextEditorElement::setScrollBottom instead.")
 
-    atom.views.getView(this).setScrollBottom(scrollBottom)
+    @viewRegistry.getView(this).setScrollBottom(scrollBottom)
 
   getScrollLeft: ->
     Grim.deprecate("This is now a view method. Call TextEditorElement::getScrollLeft instead.")
 
-    atom.views.getView(this).getScrollLeft()
+    @viewRegistry.getView(this).getScrollLeft()
 
   setScrollLeft: (scrollLeft) ->
     Grim.deprecate("This is now a view method. Call TextEditorElement::setScrollLeft instead.")
 
-    atom.views.getView(this).setScrollLeft(scrollLeft)
+    @viewRegistry.getView(this).setScrollLeft(scrollLeft)
 
   getScrollRight: ->
     Grim.deprecate("This is now a view method. Call TextEditorElement::getScrollRight instead.")
 
-    atom.views.getView(this).getScrollRight()
+    @viewRegistry.getView(this).getScrollRight()
 
   setScrollRight: (scrollRight) ->
     Grim.deprecate("This is now a view method. Call TextEditorElement::setScrollRight instead.")
 
-    atom.views.getView(this).setScrollRight(scrollRight)
+    @viewRegistry.getView(this).setScrollRight(scrollRight)
 
   getScrollHeight: ->
     Grim.deprecate("This is now a view method. Call TextEditorElement::getScrollHeight instead.")
 
-    atom.views.getView(this).getScrollHeight()
+    @viewRegistry.getView(this).getScrollHeight()
 
   getScrollWidth: ->
     Grim.deprecate("This is now a view method. Call TextEditorElement::getScrollWidth instead.")
 
-    atom.views.getView(this).getScrollWidth()
+    @viewRegistry.getView(this).getScrollWidth()
+
+  getMaxScrollTop: ->
+    Grim.deprecate("This is now a view method. Call TextEditorElement::getMaxScrollTop instead.")
+
+    @viewRegistry.getView(this).getMaxScrollTop()
 
   getVisibleRowRange: ->
     Grim.deprecate("This is now a view method. Call TextEditorElement::getVisibleRowRange instead.")
 
-    atom.views.getView(this).getVisibleRowRange()
+    @viewRegistry.getView(this).getVisibleRowRange()
 
   intersectsVisibleRowRange: (startRow, endRow) ->
     Grim.deprecate("This is now a view method. Call TextEditorElement::intersectsVisibleRowRange instead.")
 
-    atom.views.getView(this).intersectsVisibleRowRange(startRow, endRow)
+    @viewRegistry.getView(this).intersectsVisibleRowRange(startRow, endRow)
 
   selectionIntersectsVisibleRowRange: (selection) ->
     Grim.deprecate("This is now a view method. Call TextEditorElement::selectionIntersectsVisibleRowRange instead.")
 
-    atom.views.getView(this).selectionIntersectsVisibleRowRange(selection)
+    @viewRegistry.getView(this).selectionIntersectsVisibleRowRange(selection)
 
   screenPositionForPixelPosition: (pixelPosition) ->
     Grim.deprecate("This is now a view method. Call TextEditorElement::screenPositionForPixelPosition instead.")
 
-    atom.views.getView(this).screenPositionForPixelPosition(pixelPosition)
+    @viewRegistry.getView(this).screenPositionForPixelPosition(pixelPosition)
 
   pixelRectForScreenRange: (screenRange) ->
     Grim.deprecate("This is now a view method. Call TextEditorElement::pixelRectForScreenRange instead.")
 
-    atom.views.getView(this).pixelRectForScreenRange(screenRange)
+    @viewRegistry.getView(this).pixelRectForScreenRange(screenRange)
 
   ###
   Section: Utility
