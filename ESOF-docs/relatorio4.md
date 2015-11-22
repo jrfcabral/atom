@@ -6,11 +6,16 @@ empregues pela equipa no desenvolvimento da aplicação. Em primeiro lugar serã
 ## Bug Reports, Testes e Revisão de Código
 
 ### Grau de Testabilidade
-No toca à testabilidade, o Atom aparenta estar bem estruturado. A arquitetura do programa, baseada em pacotes e classes, introduz uma modularidade que torna simples a eficaz separação dos testes a correr, enquanto que a sua base, o electron, permite que haja coesão e comunicação entre os diferentes componentes, podendo assim testar-se também aspetos multi-modulares com relativa facilidade (testes de integração).
+No toca à testabilidade, o Atom aparenta estar bem estruturado. A arquitetura do programa, baseada em pacotes e classes, introduz uma modularidade que torna simples a eficaz separação dos testes a correr, enquanto que a sua base, o electron, permite que haja coesão e comunicação entre os diferentes componentes, podendo assim testar-se também aspetos de comunicação em diferentes módulos com facilidade.
+
+Nas subsecções seguintes serão analisados em maior detalhe os vários aspetos que permitem avaliar as caracteristicas de testabilidade.
 
 
 #### Controlabilidade dos componentes em estudo
-A manipulação do estado dos componentes a testar no Atom é, no geral, conseguida com elevada facilidade, recorrendo a métodos disponíveis nos mesmos.
+O Atom apresenta uma organização de código e um paradigma de programação orientado ao objecto, recorrendo às capacidades que o *javascript* confere nesta área. A linguagem de programação utilizada
+fornece as ferramentas adequadas para permitir manipular de forma completa e controlada tanto o comportamento dos objetos instanciados como o valor dos dados neles guardados. Os testes unitários são  tendencialmente orientados ao estudo do comportamento de cada classe e objeto em particular, sendo o seu contexto abstraído com recurso a várias técnicas, que se discutirão em maior profundidade na secção sobre Isolabilidade. É portanto possível compreender que as caracteristicas de controlabilidade dos componentes do Atom se ajustam particularmente bem à realização de testes unitários.
+
+Outro tipo de testes que são frequentemente utilizados são os de integração. Este tipo de testes incide principalmente sobre as interfaces utilizadas e sobre a articulação inter-componente. Neste contexto cabe realçar as facilidades de comunicação fornecidas pela plataforma *Electron* sobre a qual o *Atom* está construído. Esta plataforma define de forma clara uma separação em dois componentes de todo o *software* que sobre ela se construa, como já foi discutido em profundidade no relatório 3. O *Electron* define também as interfaces de comunicação entre componentes que podem ser utilizadas. Sendo todas estas interfaces de comunicação genéricas, é sobre elas que deve, em princípio, ser construído um protocolo de comunicação especifico da aplicação a desenvolver. Torna-se assim possível controlar, pela invocação dos métodos de comunicação fornecidos, o comportamento do sistema, manipulando a forma de integração inter-componente.
 
 #### Observabilidade dos resultados dos testes
 Os testes implementados no Atom vêem equipados com métodos que permitem a observação do estado e comportamento dos diferentes componentes, bem como métodos que avaliam a correção dos mesmos.
