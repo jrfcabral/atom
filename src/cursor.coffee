@@ -434,7 +434,7 @@ class Cursor extends Model
     scanRange = [currentBufferPosition, @editor.getEofBufferPosition()]
 
     endOfWordPosition = null
-    @editor.scanInBufferRange (options.wordRegex ? @wordRegExp()), scanRange, ({range, stop}) ->
+    @editor.scanInBufferRange (options.wordRegex ? @wordRegExp({true, false})), scanRange, ({range, stop}) ->
       if range.start.row > currentBufferPosition.row
         # force it to stop at the beginning of each line
         endOfWordPosition = new Point(range.start.row, 0)
@@ -601,12 +601,16 @@ class Cursor extends Model
   # * `options` (optional) {Object} with the following keys:
   #   * `includeNonWordCharacters` A {Boolean} indicating whether to include
   #     non-word characters in the regex. (default: true)
+  #   *'includeEmptyLines' A {Boolean} indicating wheter to include completely
+  #     empty lines in the regex. (default: true)
   #
   # Returns a {RegExp}.
-  wordRegExp: ({includeNonWordCharacters}={}) ->
+  wordRegExp: ({includeNonWordCharacters, includeEmptyLines}={}) ->
     includeNonWordCharacters ?= true
-    nonWordCharacters = @config.get('editor.nonWordCharacters', scope: @getScopeDescriptor())
-    segments = ["^[\t ]*$"]
+    includeEmptyLines ?= true
+    nonWordCharacters = atom.config.get('editor.nonWordCharacters', scope: @getScopeDescriptor())
+    segments = if includeEmptyLines then ["^[\t ]*$"] else ["^[\t ]+$"]
+
     segments.push("[^\\s#{_.escapeRegExp(nonWordCharacters)}]+")
     if includeNonWordCharacters
       segments.push("[#{_.escapeRegExp(nonWordCharacters)}]+")
