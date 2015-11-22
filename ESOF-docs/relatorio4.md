@@ -46,7 +46,9 @@ a sua funcionalidade por diversas classes que posteriormente se articulam entre 
 O Atom está [bem documentado](https://atom.io/docs/api/v1.2.3/AtomEnvironment), em parte devido à sua natureza *open-source*, que obriga a que a documentação seja explícita e concisa para que possa ser consultada e aprendida celeremente e compreendida pelo maior número de pessoas possível.
 
 #### Heterogeneidade
-No repositório do Atom está disponível uma bateria de testes de tamanho considerável. Estes testes são na sua maioria testes unitários, havendo também um número razoável de testes de integração. Além disso, o Atom vem [equipado com funcionaliades que lhe permitem correr esses testes dentro de si mesmo.](<eu gostava munto munto d ter aqui um link pras instruçoes d correr os testes mas num encontro :(>)
+No repositório do Atom está disponível uma bateria de testes de tamanho considerável. Estes testes são na sua maioria testes unitários, existindo um único teste de integração que incide sobre o comportamente de inicialização do *Atom*. O Atom vem equipado com funcionalidades que lhe permitem correr esses testes dentro de si mesmo.
+
+O *Atom* é um software bastante homogéneo de um ponto de vista técnológico, o que se reflete de forma clara na sua suite de testes. A definição de especificações em *Jasmine* é feita integralmente em *CoffeeScript*, o que é suficiente dado que toda a base de código está escrita nesta mesma linguagem, que compila diretamente para *JavaScript*.
 
 ### Estatísticas dos Testes
 Como já foi mencionado, o Atom disponibiliza uma bateria de testes no seu repositório. Os mesmo estão separados por vários ficheiros, conforme a classe sobre a qual incidem. Presentemente parecem existir 1850 testes unitários distintos, bem como alguns testes de integração. O Atom fornece ainda scripts que permitem correr estes testes de várias formas, incluindo suporto para Travis CI e, mais recentemente, AppVeyor CI.
