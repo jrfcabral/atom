@@ -12,14 +12,13 @@ yargs = require 'yargs'
 console.log = require 'nslog'
 
 start = ->
-  setupAtomHome()
+  args = parseCommandLine()
+  setupAtomHome(args)
   setupCompileCache()
   return if handleStartupEventWithSquirrel()
 
   # NB: This prevents Win10 from showing dupe items in the taskbar
   app.setAppUserModelId('com.squirrel.atom.atom')
-
-  args = parseCommandLine()
 
   addPathToOpen = (event, pathToOpen) ->
     event.preventDefault()
@@ -57,11 +56,25 @@ handleStartupEventWithSquirrel = ->
 setupCrashReporter = ->
   crashReporter.start(productName: 'Atom', companyName: 'GitHub')
 
-setupAtomHome = ->
+setupAtomHome = ({setPortable}) ->
   return if process.env.ATOM_HOME
+
   atomHome = path.join(app.getHomeDir(), '.atom')
+  AtomPortable = require './atom-portable'
+
+  if setPortable and not AtomPortable.isPortableInstall(process.platform, process.env.ATOM_HOME, atomHome)
+    try
+      AtomPortable.setPortable(atomHome)
+    catch error
+      console.log("Failed copying portable directory '#{atomHome}' to '#{AtomPortable.getPortableAtomHomePath()}'")
+      console.log("#{error.message} #{error.stack}")
+
+  if AtomPortable.isPortableInstall(process.platform, process.env.ATOM_HOME, atomHome)
+    atomHome = AtomPortable.getPortableAtomHomePath()
+
   try
     atomHome = fs.realpathSync(atomHome)
+
   process.env.ATOM_HOME = atomHome
 
 setupCompileCache = ->
@@ -99,9 +112,10 @@ parseCommandLine = ->
   options.alias('n', 'new-window').boolean('n').describe('n', 'Open a new window.')
   options.boolean('profile-startup').describe('profile-startup', 'Create a profile of the startup execution time.')
   options.alias('r', 'resource-path').string('r').describe('r', 'Set the path to the Atom source directory and enable dev-mode.')
-  options.alias('s', 'spec-directory').string('s').describe('s', 'Set the directory from which to run package specs (default: Atom\'s spec directory).')
   options.boolean('safe').describe('safe', 'Do not load packages from ~/.atom/packages or ~/.atom/dev/packages.')
+  options.boolean('portable').describe('portable', 'Set portable mode. Copies the ~/.atom folder to be a sibling of the installed Atom location if a .atom folder is not already there.')
   options.alias('t', 'test').boolean('t').describe('t', 'Run the specified specs and exit with error code on failures.')
+  options.string('timeout').describe('timeout', 'When in test mode, waits until the specified time (in minutes) and kills the process (exit code: 130).')
   options.alias('v', 'version').boolean('v').describe('v', 'Print the version.')
   options.alias('w', 'wait').boolean('w').describe('w', 'Wait for window to be closed before returning.')
   options.string('socket-path')
@@ -121,7 +135,7 @@ parseCommandLine = ->
   safeMode = args['safe']
   pathsToOpen = args._
   test = args['test']
-  specDirectory = args['spec-directory']
+  timeout = args['timeout']
   newWindow = args['new-window']
   pidToKillWhenClosed = args['pid'] if args['wait']
   logFile = args['log-file']
@@ -129,22 +143,14 @@ parseCommandLine = ->
   profileStartup = args['profile-startup']
   urlsToOpen = []
   devResourcePath = process.env.ATOM_DEV_RESOURCE_PATH ? path.join(app.getHomeDir(), 'github', 'atom')
+  setPortable = args.portable
 
   if args['resource-path']
     devMode = true
     resourcePath = args['resource-path']
-  else
-    # Set resourcePath based on the specDirectory if running specs on atom core
-    if specDirectory?
-      packageDirectoryPath = path.join(specDirectory, '..')
-      packageManifestPath = path.join(packageDirectoryPath, 'package.json')
-      if fs.statSyncNoException(packageManifestPath)
-        try
-          packageManifest = JSON.parse(fs.readFileSync(packageManifestPath))
-          resourcePath = packageDirectoryPath if packageManifest.name is 'atom'
 
-    if devMode
-      resourcePath ?= devResourcePath
+  devMode = true if test
+  resourcePath ?= devResourcePath if devMode
 
   unless fs.statSyncNoException(resourcePath)
     resourcePath = path.dirname(path.dirname(__dirname))
@@ -157,7 +163,7 @@ parseCommandLine = ->
   devResourcePath = normalizeDriveLetterName(devResourcePath)
 
   {resourcePath, devResourcePath, pathsToOpen, urlsToOpen, executedFrom, test,
-   version, pidToKillWhenClosed, devMode, safeMode, newWindow, specDirectory,
-   logFile, socketPath, profileStartup}
+   version, pidToKillWhenClosed, devMode, safeMode, newWindow,
+   logFile, socketPath, profileStartup, timeout, setPortable}
 
 start()

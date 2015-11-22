@@ -1,9 +1,11 @@
 (function () {
-  var fs = require('fs')
   var path = require('path')
+  var FileSystemBlobStore = require('../src/file-system-blob-store')
+  var NativeCompileCache = require('../src/native-compile-cache')
 
   var loadSettings = null
   var loadSettingsError = null
+  var blobStore = null
 
   window.onload = function () {
     try {
@@ -13,8 +15,11 @@
         console.error('Unhandled promise rejection %o with error: %o', promise, error)
       })
 
-      // Ensure ATOM_HOME is always set before anything else is required
-      setupAtomHome()
+      blobStore = FileSystemBlobStore.load(
+        path.join(process.env.ATOM_HOME, 'blob-store/')
+      )
+      NativeCompileCache.setCacheStore(blobStore)
+      NativeCompileCache.install()
 
       // Normalize to make sure drive letter case is consistent on Windows
       process.resourcesPath = path.normalize(process.resourcesPath)
@@ -76,26 +81,9 @@
     setupVmCompatibility()
     setupCsonCache(CompileCache.getCacheDirectory())
 
-    require(loadSettings.bootstrapScript)
+    var initialize = require(loadSettings.windowInitializationScript)
+    initialize({blobStore: blobStore})
     require('ipc').sendChannel('window-command', 'window:loaded')
-  }
-
-  function setupAtomHome () {
-    if (!process.env.ATOM_HOME) {
-      var home
-      if (process.platform === 'win32') {
-        home = process.env.USERPROFILE
-      } else {
-        home = process.env.HOME
-      }
-      var atomHome = path.join(home, '.atom')
-      try {
-        atomHome = fs.realpathSync(atomHome)
-      } catch (error) {
-        // Ignore since the path might just not exist yet.
-      }
-      process.env.ATOM_HOME = atomHome
-    }
   }
 
   function setupCsonCache (cacheDir) {
@@ -141,7 +129,7 @@
     } else {
       currentWindow.openDevTools()
       currentWindow.once('devtools-opened', function () {
-        setTimeout(profile, 100)
+        setTimeout(profile, 1000)
       })
     }
   }
@@ -168,7 +156,7 @@
 
     var backgroundStylesheet = document.createElement('style')
     backgroundStylesheet.type = 'text/css'
-    backgroundStylesheet.innerText = 'html, body { background: ' + backgroundColor + '; }'
+    backgroundStylesheet.innerText = 'html, body { background: ' + backgroundColor + ' !important; }'
     document.head.appendChild(backgroundStylesheet)
 
     // Remove once the page loads
@@ -181,6 +169,20 @@
     }, false)
   }
 
+  var setupAtomHome = function () {
+    if (process.env.ATOM_HOME) {
+      return
+    }
+
+    // Ensure ATOM_HOME is always set before anything else is required
+    // This is because of a difference in Linux not inherited between browser and render processes
+    // https://github.com/atom/atom/issues/5412
+    if (loadSettings && loadSettings.atomHome) {
+      process.env.ATOM_HOME = loadSettings.atomHome
+    }
+  }
+
   parseLoadSettings()
+  setupAtomHome()
   setupWindowBackground()
 })()

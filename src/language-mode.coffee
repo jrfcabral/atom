@@ -8,7 +8,7 @@ class LanguageMode
   # Sets up a `LanguageMode` for the given {TextEditor}.
   #
   # editor - The {TextEditor} to associate with
-  constructor: (@editor) ->
+  constructor: (@editor, @config) ->
     {@buffer} = @editor
 
   destroy: ->
@@ -97,8 +97,8 @@ class LanguageMode
 
   # Unfolds all the foldable lines in the buffer.
   unfoldAll: ->
-    for row in [@buffer.getLastRow()..0] by -1
-      fold.destroy() for fold in @editor.displayBuffer.foldsStartingAtBufferRow(row)
+    for fold in @editor.displayBuffer.foldsIntersectingBufferRowRange(0, @buffer.getLastRow()) by -1
+      fold.destroy()
     return
 
   # Fold all comment and code blocks at a given indentLevel
@@ -327,7 +327,7 @@ class LanguageMode
       @editor.setIndentationForBufferRow(bufferRow, desiredIndentLevel)
 
   getRegexForProperty: (scopeDescriptor, property) ->
-    if pattern = atom.config.get(property, scope: scopeDescriptor)
+    if pattern = @config.get(property, scope: scopeDescriptor)
       new OnigRegExp(pattern)
 
   increaseIndentRegexForScopeDescriptor: (scopeDescriptor) ->
@@ -343,8 +343,8 @@ class LanguageMode
     @getRegexForProperty(scopeDescriptor, 'editor.foldEndPattern')
 
   commentStartAndEndStringsForScope: (scope) ->
-    commentStartEntry = atom.config.getAll('editor.commentStart', {scope})[0]
-    commentEndEntry = _.find atom.config.getAll('editor.commentEnd', {scope}), (entry) ->
+    commentStartEntry = @config.getAll('editor.commentStart', {scope})[0]
+    commentEndEntry = _.find @config.getAll('editor.commentEnd', {scope}), (entry) ->
       entry.scopeSelector is commentStartEntry.scopeSelector
     commentStartString = commentStartEntry?.value
     commentEndString = commentEndEntry?.value
