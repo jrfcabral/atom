@@ -1,9 +1,13 @@
 # [ESOF] Relatório 4 - Verificação e Validação
+
+Este é o quarto relatório dedicado à análise dos processos de engenharia de software empregues pelo projeto *open-source* Atom. Desta feita serão analisados os processos de verificação e validação
+empregues pela equipa no desenvolvimento da aplicação. Em primeiro lugar serão discutidas as caracteristicas lógicas e organizacionais do código e da tecnologia de especificação de testes utilizada. Procura-se entender de que forma é que a base de código de aplicação se ajusta e enquadra no contexto da execução de testes unitários e de integração e tambem quais as valências da plataforma de testes utilizada que permite ultrapassar os principais desafios que se lhe colocam, nomeadamente o da isolação de componentes e a controlabilidade dos testes sobre o seu comportamento.
+
 ## Bug Reports, Testes e Revisão de Código
 
 ### Grau de Testabilidade
+No toca à testabilidade, o Atom aparenta estar bem estruturado. A arquitetura do programa, baseada em pacotes e classes, introduz uma modularidade que torna simples a eficaz separação dos testes a correr, enquanto que a sua base, o electron, permite que haja coesão e comunicação entre os diferentes componentes, podendo assim testar-se também aspetos multi-modulares com relativa facilidade (testes de integração).
 
-No toca à testabilidade, o Atom aparenta estar extremamente bem estruturado. A arquitetura do programa, baseada em pacotes e classes, introduz uma modularidade que torna simples a eficaz separação dos testes a correr, enquanto que a sua base, o electron, permite que haja coesão e comunicação entre os diferentes componentes, podendo assim testar-se também aspetos multi-modulares com relativa facilidade (testes de integração).
 
 #### Controlabilidade dos componentes em estudo
 A manipulação do estado dos componentes a testar no Atom é, no geral, conseguida com elevada facilidade, recorrendo a métodos disponíveis nos mesmos.
@@ -18,7 +22,7 @@ A isolabilidade das diferentes componentes do Atom varia consoante o caso. Exist
 A arquitetura do Atom é, como já foi referido, baseada em classes. É da opinião do grupo que cada classe tem um trabalho bastante bem definido.
 
 #### Documentação dos componentes
-O Atom está [extremamente bem documentado](https://atom.io/docs/api/v1.2.3/AtomEnvironment), em parte devido à sua natureza *open-source*, que obriga a que a documentação seja explícita e concisa para que possa ser consultada e aprendida celeremente e compreendida pelo maior número de pessoas possível.
+O Atom está [bem documentado](https://atom.io/docs/api/v1.2.3/AtomEnvironment), em parte devido à sua natureza *open-source*, que obriga a que a documentação seja explícita e concisa para que possa ser consultada e aprendida celeremente e compreendida pelo maior número de pessoas possível.
 
 #### Heterogeneidade
 No repositório do Atom está disponível uma bateria de testes de tamanho considerável. Estes testes são na sua maioria testes unitários, havendo também um número razoável de testes de integração. Além disso, o Atom vem [equipado com funcionaliades que lhe permitem correr esses testes dentro de si mesmo.](<eu gostava munto munto d ter aqui um link pras instruçoes d correr os testes mas num encontro :(>)
