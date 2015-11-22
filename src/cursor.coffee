@@ -432,9 +432,9 @@ class Cursor extends Model
   getNextWordBoundaryBufferPosition: (options = {}) ->
     currentBufferPosition = @getBufferPosition()
     scanRange = [currentBufferPosition, @editor.getEofBufferPosition()]
-
+    options.includeEmptyLines = false
     endOfWordPosition = null
-    @editor.scanInBufferRange (options.wordRegex ? @wordRegExp({true, false})), scanRange, ({range, stop}) ->
+    @editor.scanInBufferRange (options.wordRegex ? @wordRegExp(options)), scanRange, ({range, stop}) ->
       if range.start.row > currentBufferPosition.row
         # force it to stop at the beginning of each line
         endOfWordPosition = new Point(range.start.row, 0)
