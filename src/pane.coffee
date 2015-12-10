@@ -433,12 +433,12 @@ class Pane extends Model
   # setting is `true`.
   #
   # * `item` Item to destroy
-  destroyItem: (item) ->
+  destroyItem: (item, multiple = false) ->
     index = @items.indexOf(item)
     if index isnt -1
       @emitter.emit 'will-destroy-item', {item, index}
       @container?.willDestroyPaneItem({item, index, pane: this})
-      returnVal = @promptToSaveItem(item)
+      returnVal = @promptToSaveItem(item, {}, multiple)
       if returnVal is true
         console.log "dei true"
         @removeItem(item, false)
@@ -459,11 +459,13 @@ class Pane extends Model
 
   # Public: Destroy all items.
   destroyItems: ->
+    items = @getItems()
+    multiple = items.length > 1
     doForAll = true
-    for item in @getItems()
+    for item in items
       if doForAll is true or doForAll is false
         console.log "tou no normal"
-        doForAll = @destroyItem(item)
+        doForAll = @destroyItem(item, multiple)
       else if doForAll is "nfa"
         console.log "tou no no for all"
         @removeItem(item, false)
@@ -484,7 +486,7 @@ class Pane extends Model
         item.destroy?()
     return
 
-  promptToSaveItem: (item, options={}) ->
+  promptToSaveItem: (item, options={}, multiple=false) ->
     return true unless item.shouldPromptToSave?(options)
 
     if typeof item.getURI is 'function'
@@ -497,7 +499,7 @@ class Pane extends Model
     chosen = @applicationDelegate.confirm
       message: "'#{item.getTitle?() ? uri}' has changes, do you want to save them?"
       detailedMessage: "Your changes will be lost if you close this item without saving."
-      buttons: ["Save", "Cancel", "Don't Save", "No For All", "Yes For All"]
+      buttons: if multiple then ["Save", "Cancel", "Don't Save", "No For All", "Yes For All"] else ["Save", "Cancel", "Don't Save"]
 
     switch chosen
       when 0 then @saveItem(item, -> true)
