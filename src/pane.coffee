@@ -438,21 +438,50 @@ class Pane extends Model
     if index isnt -1
       @emitter.emit 'will-destroy-item', {item, index}
       @container?.willDestroyPaneItem({item, index, pane: this})
-      if @promptToSaveItem(item)
+      returnVal = @promptToSaveItem(item)
+      if returnVal is true
+        console.log "dei true"
         @removeItem(item, false)
         item.destroy?()
         true
+      else if returnVal is "no for all"
+        console.log "passei no nfa"
+        @removeItem(item, false)
+        item.destroy?()
+        return "nfa"
+      else if returnVal is "yes for all"
+        console.log "passei no yfa"
+        @saveItem(item, -> true) if item.shouldPromptToSave?({})
+        return "yfa"
       else
+        console.log "dei false"
         false
 
   # Public: Destroy all items.
   destroyItems: ->
-    @destroyItem(item) for item in @getItems()
+    doForAll = true
+    for item in @getItems()
+      if doForAll is true or doForAll is false
+        console.log "tou no normal"
+        doForAll = @destroyItem(item)
+      else if doForAll is "nfa"
+        console.log "tou no no for all"
+        @removeItem(item, false)
+        item.destroy?()
+      else if doForAll is "yfa"
+        console.log "tou no yes for all"
+        @saveItem(item, -> true) if item.shouldPromptToSave?({})
     return
 
   # Public: Destroy all items except for the active item.
   destroyInactiveItems: ->
-    @destroyItem(item) for item in @getItems() when item isnt @activeItem
+    doForAll = true
+    for item in @getItems()
+      if doForAll is true or doForAll is false
+        doForAll = @destroyItem(item) if item isnt @activeItem
+      else if doForAll is "nfa" and item isnt @activeItem
+        @removeItem(item, false)
+        item.destroy?()
     return
 
   promptToSaveItem: (item, options={}) ->
@@ -468,12 +497,14 @@ class Pane extends Model
     chosen = @applicationDelegate.confirm
       message: "'#{item.getTitle?() ? uri}' has changes, do you want to save them?"
       detailedMessage: "Your changes will be lost if you close this item without saving."
-      buttons: ["Save", "Cancel", "Don't Save"]
+      buttons: ["Save", "Cancel", "Don't Save", "No For All", "Yes For All"]
 
     switch chosen
       when 0 then @saveItem(item, -> true)
       when 1 then false
       when 2 then true
+      when 3 then return "no for all"
+      when 4 then return "yes for all"
 
   # Public: Save the active item.
   saveActiveItem: (nextAction) ->
@@ -708,9 +739,10 @@ class Pane extends Model
       @splitDown()
 
   close: ->
-    @destroy() if @confirmClose()
+    @destroy() #if @confirmClose()
 
   confirmClose: ->
+    console.log "pane.confirmClose"
     for item in @getItems()
       return false unless @promptToSaveItem(item)
     true
