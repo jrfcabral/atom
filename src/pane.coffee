@@ -433,12 +433,13 @@ class Pane extends Model
   # setting is `true`.
   #
   # * `item` Item to destroy
-  destroyItem: (item, multiple = false) ->
+  destroyItem: (item, multipleItemsToSave=false) ->
     index = @items.indexOf(item)
+    console.log(index);
     if index isnt -1
       @emitter.emit 'will-destroy-item', {item, index}
       @container?.willDestroyPaneItem({item, index, pane: this})
-      returnVal = @promptToSaveItem(item, {}, multiple)
+      returnVal = @promptToSaveItem(item, {}, multipleItemsToSave)
       if returnVal is true
         console.log "dei true"
         @removeItem(item, false)
@@ -459,13 +460,13 @@ class Pane extends Model
 
   # Public: Destroy all items.
   destroyItems: ->
-    items = @getItems()
-    multiple = items.length > 1
+    itemsInPane = @getItems()
+    multipleItemsToSave = (itemsInPane.length > 1)
     doForAll = true
-    for item in items
+    for item in @getItems()
       if doForAll is true or doForAll is false
         console.log "tou no normal"
-        doForAll = @destroyItem(item, multiple)
+        doForAll = @destroyItem(item, multipleItemsToSave)
       else if doForAll is "nfa"
         console.log "tou no no for all"
         @removeItem(item, false)
@@ -477,13 +478,7 @@ class Pane extends Model
 
   # Public: Destroy all items except for the active item.
   destroyInactiveItems: ->
-    doForAll = true
-    for item in @getItems()
-      if doForAll is true or doForAll is false
-        doForAll = @destroyItem(item) if item isnt @activeItem
-      else if doForAll is "nfa" and item isnt @activeItem
-        @removeItem(item, false)
-        item.destroy?()
+    @destroyItem(item) for item in @getItems() when item isnt @activeItem
     return
 
   promptToSaveItem: (item, options={}, multiple=false) ->
@@ -616,6 +611,7 @@ class Pane extends Model
   # If this is the last pane, all the items will be destroyed but the pane
   # itself will not be destroyed.
   destroy: ->
+    console.log "passei no destroy"
     if @container?.isAlive() and @container.getPanes().length is 1
       @destroyItems()
     else
@@ -625,10 +621,11 @@ class Pane extends Model
 
   # Called by model superclass.
   destroyed: ->
+    @destroyItems()
     @container.activateNextPane() if @isActive()
     @emitter.emit 'did-destroy'
     @emitter.dispose()
-    item.destroy?() for item in @items.slice()
+    console.log "passei aqui no destroyed"
     @container?.didDestroyPane(pane: this)
 
   ###
