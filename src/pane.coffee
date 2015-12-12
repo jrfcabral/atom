@@ -433,47 +433,26 @@ class Pane extends Model
   # setting is `true`.
   #
   # * `item` Item to destroy
-  destroyItem: (item, multipleItemsToSave=false) ->
+  destroyItem: (item, promptToSave=true) ->
     index = @items.indexOf(item)
-    console.log(index);
     if index isnt -1
       @emitter.emit 'will-destroy-item', {item, index}
       @container?.willDestroyPaneItem({item, index, pane: this})
-      returnVal = @promptToSaveItem(item, {}, multipleItemsToSave)
-      if returnVal is true
-        console.log "dei true"
+      if promptToSave
+        if @promptToSaveItem(item)
+          @removeItem(item, false)
+          item.destroy?()
+          true
+        else
+          false
+      else
         @removeItem(item, false)
         item.destroy?()
         true
-      else if returnVal is "no for all"
-        console.log "passei no nfa"
-        @removeItem(item, false)
-        item.destroy?()
-        return "nfa"
-      else if returnVal is "yes for all"
-        console.log "passei no yfa"
-        @saveItem(item, -> true) if item.shouldPromptToSave?({})
-        return "yfa"
-      else
-        console.log "dei false"
-        false
 
   # Public: Destroy all items.
   destroyItems: ->
-    itemsInPane = @getItems()
-    multipleItemsToSave = (itemsInPane.length > 1)
-    doForAll = true
-    for item in @getItems()
-      if doForAll is true or doForAll is false
-        console.log "tou no normal"
-        doForAll = @destroyItem(item, multipleItemsToSave)
-      else if doForAll is "nfa"
-        console.log "tou no no for all"
-        @removeItem(item, false)
-        item.destroy?()
-      else if doForAll is "yfa"
-        console.log "tou no yes for all"
-        @saveItem(item, -> true) if item.shouldPromptToSave?({})
+    @destroyItem(item, false) for item in @getItems()
     return
 
   # Public: Destroy all items except for the active item.
@@ -500,8 +479,8 @@ class Pane extends Model
       when 0 then @saveItem(item, -> true)
       when 1 then false
       when 2 then true
-      when 3 then return "no for all"
-      when 4 then return "yes for all"
+      when 3 then return 1
+      when 4 then return 2
 
   # Public: Save the active item.
   saveActiveItem: (nextAction) ->
@@ -611,7 +590,6 @@ class Pane extends Model
   # If this is the last pane, all the items will be destroyed but the pane
   # itself will not be destroyed.
   destroy: ->
-    console.log "passei no destroy"
     if @container?.isAlive() and @container.getPanes().length is 1
       @destroyItems()
     else
@@ -621,11 +599,10 @@ class Pane extends Model
 
   # Called by model superclass.
   destroyed: ->
-    @destroyItems()
     @container.activateNextPane() if @isActive()
     @emitter.emit 'did-destroy'
     @emitter.dispose()
-    console.log "passei aqui no destroyed"
+    item.destroy?() for item in @items.slice()
     @container?.didDestroyPane(pane: this)
 
   ###
@@ -738,12 +715,22 @@ class Pane extends Model
       @splitDown()
 
   close: ->
-    @destroy() #if @confirmClose()
+    @destroy() if @confirmClose()
 
   confirmClose: ->
-    console.log "pane.confirmClose"
-    for item in @getItems()
-      return false unless @promptToSaveItem(item)
+    items = @getItems()
+    promptToSave = true
+    for item in items
+      if promptToSave is true
+        promptToSave = @promptToSaveItem(item, {} ,(items.length > 1))
+        if promptToSave is 2
+          @saveItem(item)
+      else if promptToSave is false
+        return false
+      else if promptToSave is 1  #return for no for all
+        break
+      else if promptToSave is 2 #return for yes for all
+        @saveItem(item) if item.shouldPromptToSave?()
     true
 
   handleSaveError: (error, item) ->
