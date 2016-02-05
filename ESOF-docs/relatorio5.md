@@ -14,7 +14,7 @@ Após alguma pesquisa, constatou-se que a maneira como o Atom trata o fechar de 
  buttons: if multiple then ["Save", "Cancel", "Don't Save", "No For All", "Yes For All"] else ["Save", "Cancel", "Don't Save"]
 ```
 
-Ao serem pressionados, a função que lança a janela de opções de gravação retorna valores específicos, que serão apanhados na função que a chama **confirmClose**. Esta função, que itera sobre os *items* pertencentes a uma *pane*, terá comportamentos distintos consoante o valor que lhe é passada.
+Ao serem pressionados, a função que lança a janela de opções de gravação retorna valores específicos, que serão apanhados na função que a chama **confirmClose**. Esta função, que itera sobre os *items* pertencentes a uma *pane*, terá comportamentos distintos consoante o valor que lhe é passado.
 
 ## Submissão da feature desenvolvida
 
